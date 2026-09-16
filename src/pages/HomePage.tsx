@@ -55,45 +55,45 @@ export const HomePage: React.FC<HomePageProps> = ({
   return (
     <div className="space-y-10 pb-16">
       {/* HERO SECTION */}
-      <section className="relative overflow-hidden pt-6 sm:pt-10 pb-8 sm:pb-12 rounded-3xl bg-gradient-to-b from-amber-500/10 via-rose-500/5 to-transparent border border-amber-200/60 p-4 sm:p-8 text-center shadow-xs">
+      <section className="relative overflow-hidden pt-6 sm:pt-10 pb-8 sm:pb-12 rounded-3xl bg-gradient-to-b from-[#181542]/80 via-[#121435]/60 to-[#0b0d24]/50 border border-purple-500/30 p-4 sm:p-8 text-center shadow-[0_0_40px_rgba(168,85,247,0.15)] backdrop-blur-xs">
         {/* Subtle decorative circles */}
-        <div className="absolute -top-16 -left-16 w-48 h-48 rounded-full bg-amber-400/10 blur-2xl pointer-events-none" />
-        <div className="absolute -bottom-16 -right-16 w-56 h-56 rounded-full bg-rose-400/10 blur-2xl pointer-events-none" />
+        <div className="absolute -top-16 -left-16 w-48 h-48 rounded-full bg-indigo-600/20 blur-2xl pointer-events-none" />
+        <div className="absolute -bottom-16 -right-16 w-56 h-56 rounded-full bg-pink-600/20 blur-2xl pointer-events-none" />
 
         <div className="relative max-w-3xl mx-auto space-y-4">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/90 shadow-xs border border-amber-200 text-xs font-semibold text-amber-800">
-            <span className="flex h-2 w-2 rounded-full bg-rose-500 animate-pulse" />
-            <span>NongKaem888 • ฐานข้อมูล 105+ สถานที่จริงในชลบุรี</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-950/80 shadow-xs border border-purple-500/40 text-xs font-semibold text-pink-300">
+            <span className="flex h-2 w-2 rounded-full bg-pink-500 animate-pulse" />
+            <span>NongKaem888 • ฐานข้อมูล 105+ สถานที่จริงในชลบุรี (มีรูปครบ 3-4 รูป/แห่ง)</span>
           </div>
 
           {/* Main Display Headline */}
-          <h1 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight leading-tight">
+          <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">
             “วันนี้ไปไหนดี?”
-            <span className="block text-2xl sm:text-4xl mt-1 bg-gradient-to-r from-amber-600 via-rose-600 to-orange-500 bg-clip-text text-transparent">
+            <span className="block text-2xl sm:text-4xl mt-1 bg-gradient-to-r from-purple-400 via-fuchsia-400 to-pink-400 bg-clip-text text-transparent">
               สุ่มที่เที่ยวชลบุรี ปลดล็อกทริปที่ใช่ทันที
             </span>
           </h1>
 
-          <p className="text-sm sm:text-base text-slate-600 max-w-xl mx-auto font-normal leading-relaxed">
+          <p className="text-sm sm:text-base text-slate-300 max-w-xl mx-auto font-normal leading-relaxed">
             หมดปัญหาไม่รู้จะไปไหน! สุ่มสถานที่จริงครบทุกสไตล์ ทั้งทะเล เกาะ คาเฟ่ ตลาด
-            ห้าง สวนน้ำ จุดถ่ายรูป และที่เด็ดที่ไม่ควรพลาด
+            ห้าง สวนน้ำ จุดถ่ายรูป พร้อมแกลเลอรี่รูปภาพ 3-4 รูปให้ชมก่อนเดินทาง
           </p>
 
           {/* District Selector & Filter Details Bar */}
           <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
             {/* District Dropdown */}
-            <div className="flex items-center gap-1.5 bg-white px-3.5 py-2 rounded-2xl border border-slate-200 shadow-xs text-xs sm:text-sm">
-              <MapPin className="w-4 h-4 text-rose-500 shrink-0" />
-              <span className="font-semibold text-slate-700">พื้นที่:</span>
+            <div className="flex items-center gap-1.5 bg-[#121438] px-3.5 py-2 rounded-2xl border border-purple-500/30 shadow-xs text-xs sm:text-sm text-slate-200">
+              <MapPin className="w-4 h-4 text-pink-400 shrink-0" />
+              <span className="font-semibold text-slate-300">พื้นที่:</span>
               <select
                 id="select-district-filter"
                 value={selectedDistrict}
                 onChange={(e) => setSelectedDistrict(e.target.value)}
-                className="bg-transparent font-bold text-amber-700 focus:outline-hidden cursor-pointer"
+                className="bg-transparent font-bold text-pink-300 focus:outline-hidden cursor-pointer"
               >
                 {CHONBURI_DISTRICTS.map((d) => (
-                  <option key={d} value={d}>
+                  <option key={d} value={d} className="bg-[#121438] text-white">
                     {d}
                   </option>
                 ))}
@@ -101,10 +101,10 @@ export const HomePage: React.FC<HomePageProps> = ({
             </div>
 
             {/* Candidate count indicator */}
-            <div className="flex items-center gap-1.5 bg-white px-3.5 py-2 rounded-2xl border border-slate-200 shadow-xs text-xs sm:text-sm text-slate-600">
-              <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+            <div className="flex items-center gap-1.5 bg-[#121438] px-3.5 py-2 rounded-2xl border border-purple-500/30 shadow-xs text-xs sm:text-sm text-slate-300">
+              <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
               <span>
-                พร้อมสุ่ม <strong className="text-slate-900">{eligiblePlaces.length}</strong> แห่ง
+                พร้อมสุ่ม <strong className="text-white font-bold">{eligiblePlaces.length}</strong> แห่ง
               </span>
             </div>
           </div>
@@ -114,7 +114,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             <button
               id="btn-main-random"
               onClick={handleRandomClick}
-              className="group relative w-full sm:w-auto min-w-[280px] sm:min-w-[340px] px-8 py-5 sm:py-6 rounded-3xl bg-gradient-to-r from-amber-500 via-rose-500 to-orange-500 text-white font-black text-xl sm:text-2xl shadow-xl shadow-rose-500/25 hover:shadow-2xl hover:shadow-rose-500/40 hover:scale-[1.02] active:scale-98 transition-all duration-200 border border-white/30"
+              className="group relative w-full sm:w-auto min-w-[280px] sm:min-w-[340px] px-8 py-5 sm:py-6 rounded-3xl bg-gradient-to-r from-purple-600 via-fuchsia-600 to-pink-500 text-white font-black text-xl sm:text-2xl shadow-[0_0_35px_rgba(236,72,153,0.4)] hover:shadow-[0_0_45px_rgba(236,72,153,0.6)] hover:scale-[1.02] active:scale-98 transition-all duration-200 border border-pink-400/40"
             >
               <div className="flex items-center justify-center gap-3">
                 <Dice5 className="w-8 h-8 group-hover:rotate-180 transition-transform duration-500 shrink-0" />
@@ -122,7 +122,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                 <Sparkles className="w-6 h-6 animate-bounce shrink-0" />
               </div>
 
-              <div className="text-[11px] sm:text-xs font-medium text-amber-100 mt-1 opacity-90">
+              <div className="text-[11px] sm:text-xs font-medium text-pink-200 mt-1 opacity-90">
                 {activeFilterMeta.label} • {selectedDistrict === 'ทั้งหมด' ? 'ทุกพื้นที่ในชลบุรี' : selectedDistrict}
               </div>
             </button>
@@ -134,12 +134,12 @@ export const HomePage: React.FC<HomePageProps> = ({
       <section className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Filter className="w-5 h-5 text-amber-600" />
-            <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight">
+            <Filter className="w-5 h-5 text-pink-400" />
+            <h2 className="text-lg sm:text-xl font-extrabold text-white tracking-tight">
               เลือกหมวดหมู่ที่ต้องการสุ่ม
             </h2>
           </div>
-          <span className="text-xs text-slate-500">แตะเพื่อเปลี่ยนเงื่อนไขสุ่ม</span>
+          <span className="text-xs text-slate-400">แตะเพื่อเปลี่ยนเงื่อนไขสุ่ม</span>
         </div>
 
         {/* Scrollable Horizontal / Grid Filter Chips */}
@@ -153,8 +153,8 @@ export const HomePage: React.FC<HomePageProps> = ({
                 onClick={() => setSelectedFilter(f.id)}
                 className={`p-3 rounded-2xl border text-left transition-all duration-200 flex flex-col justify-between ${
                   isSelected
-                    ? 'bg-gradient-to-br from-amber-500 to-rose-500 text-white border-transparent shadow-md scale-[1.02]'
-                    : 'bg-white border-slate-200 hover:border-amber-300 hover:bg-amber-50/40 text-slate-800'
+                    ? 'bg-gradient-to-br from-purple-600 via-fuchsia-600 to-pink-600 text-white border-pink-400 shadow-[0_0_20px_rgba(217,70,239,0.35)] scale-[1.02]'
+                    : 'bg-[#0e102b]/90 border-purple-500/20 hover:border-pink-500/40 hover:bg-purple-950/40 text-slate-200'
                 }`}
               >
                 <div className="flex items-center justify-between">
@@ -164,10 +164,10 @@ export const HomePage: React.FC<HomePageProps> = ({
                   )}
                 </div>
                 <div className="mt-2">
-                  <span className={`block font-bold text-xs sm:text-sm ${isSelected ? 'text-white' : 'text-slate-900'}`}>
+                  <span className={`block font-bold text-xs sm:text-sm ${isSelected ? 'text-white' : 'text-slate-100'}`}>
                     {f.label}
                   </span>
-                  <span className={`text-[10px] line-clamp-1 mt-0.5 ${isSelected ? 'text-amber-100' : 'text-slate-600'}`}>
+                  <span className={`text-[10px] line-clamp-1 mt-0.5 ${isSelected ? 'text-pink-100' : 'text-slate-400'}`}>
                     {f.description}
                   </span>
                 </div>
@@ -181,14 +181,14 @@ export const HomePage: React.FC<HomePageProps> = ({
       <section className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Flame className="w-5 h-5 text-rose-500" />
-            <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight">
+            <Flame className="w-5 h-5 text-pink-500" />
+            <h2 className="text-lg sm:text-xl font-extrabold text-white tracking-tight">
               สถานที่ยอดนิยมในชลบุรี (คะแนนสูงสุด)
             </h2>
           </div>
           <button
             onClick={onNavigateDirectory}
-            className="flex items-center gap-1 text-xs sm:text-sm font-semibold text-amber-600 hover:text-amber-700"
+            className="flex items-center gap-1 text-xs sm:text-sm font-semibold text-pink-400 hover:text-pink-300 transition-colors"
           >
             <span>ดูทั้งหมด ({places.length})</span>
             <ChevronRight className="w-4 h-4" />

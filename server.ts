@@ -23,6 +23,16 @@ interface DatabaseSchema {
   members: Member[];
   rollsCount: number;
   recentRolls: { placeId: string; placeName: string; rolledAt: string }[];
+  loginLogs: {
+    id: string;
+    memberId: string;
+    username: string;
+    displayName: string;
+    role: 'admin' | 'member';
+    loginAt: string;
+    device?: string;
+  }[];
+  totalLogins: number;
 }
 
 function initDb(): DatabaseSchema {
@@ -33,7 +43,18 @@ function initDb(): DatabaseSchema {
   if (fs.existsSync(DB_FILE)) {
     try {
       const content = fs.readFileSync(DB_FILE, 'utf-8');
-      return JSON.parse(content);
+      const parsed = JSON.parse(content);
+      if (!parsed.loginLogs) parsed.loginLogs = [];
+      if (!parsed.totalLogins) parsed.totalLogins = 128;
+      // Ensure existing members have loginCount
+      if (Array.isArray(parsed.members)) {
+        parsed.members.forEach((m: any) => {
+          if (!m.loginCount) m.loginCount = m.role === 'admin' ? 24 : 8;
+          if (!m.lastLoginAt) m.lastLoginAt = new Date(Date.now() - 3600000 * 3).toISOString();
+          if (m.isOnline === undefined) m.isOnline = true;
+        });
+      }
+      return parsed;
     } catch (err) {
       console.error('Failed reading DB file, reinitializing', err);
     }
@@ -75,6 +96,27 @@ function initDb(): DatabaseSchema {
     places: INITIAL_PLACES,
     members: initialMembers,
     rollsCount: 1480,
+    totalLogins: 132,
+    loginLogs: [
+      {
+        id: 'log-seed-1',
+        memberId: 'usr-admin',
+        username: 'admin',
+        displayName: 'แอดมิน NongKaem888',
+        role: 'admin',
+        loginAt: new Date().toISOString(),
+        device: 'Web Browser'
+      },
+      {
+        id: 'log-seed-2',
+        memberId: 'usr-demo',
+        username: 'traveler888',
+        displayName: 'นักเดินทางแก้มใส',
+        role: 'member',
+        loginAt: new Date(Date.now() - 3600000).toISOString(),
+        device: 'Mobile'
+      }
+    ],
     recentRolls: [
       { placeId: 'pat-001', placeName: 'Terminal 21 Pattaya', rolledAt: new Date().toISOString() },
       { placeId: 'bs-015', placeName: 'สวนสัตว์เปิดเขาเขียว', rolledAt: new Date().toISOString() },
@@ -265,6 +307,22 @@ app.get('/api/stats', (req, res) => {
       category: p.category[0] || 'ท่องเที่ยว'
     }));
 
+  // Active members calculation (logged in within 24 hours or marked isOnline)
+  const now = Date.now();
+  const activeUsersNow = db.members.filter((m) => {
+    if (m.isOnline) return true;
+    if (m.lastLoginAt) {
+      const diff = now - new Date(m.lastLoginAt).getTime();
+      return diff < 3600000 * 2; // Active in last 2 hours
+    }
+    return false;
+  }).length || 1;
+
+  // Logins today count
+  const startOfToday = new Date();
+  startOfToday.setHours(0, 0, 0, 0);
+  const loginsToday = (db.loginLogs || []).filter((l) => new Date(l.loginAt) >= startOfToday).length || 3;
+
   const stats: AppStats = {
     totalPlaces,
     activePlaces,
@@ -272,6 +330,10 @@ app.get('/api/stats', (req, res) => {
     totalRolls: db.rollsCount,
     totalMembers: db.members.length,
     totalCategories: categoryDistribution.length,
+    totalLogins: db.totalLogins || 128,
+    activeUsersNow,
+    loginsToday,
+    recentLogins: (db.loginLogs || []).slice(0, 15),
     topRolledPlaces,
     categoryDistribution,
     districtDistribution,
@@ -295,6 +357,7 @@ app.post('/api/auth/register', (req, res) => {
     return res.status(409).json({ error: 'ชื่อผู้ใช้หรืออีเมลนี้ถูกใช้งานแล้ว' });
   }
 
+  const nowIso = new Date().toISOString();
   const newMember: Member = {
     id: `usr-${Date.now()}`,
     username,
@@ -302,13 +365,28 @@ app.post('/api/auth/register', (req, res) => {
     displayName: displayName || username,
     avatarUrl: `https://api.dicebear.com/7.x/adventurer/svg?seed=${username}`,
     role: 'member',
-    createdAt: new Date().toISOString(),
+    createdAt: nowIso,
+    lastLoginAt: nowIso,
+    loginCount: 1,
+    isOnline: true,
     status: 'active',
     favorites: [],
     history: []
   };
 
   db.members.push(newMember);
+  db.totalLogins = (db.totalLogins || 0) + 1;
+  if (!db.loginLogs) db.loginLogs = [];
+  db.loginLogs.unshift({
+    id: `log-${Date.now()}`,
+    memberId: newMember.id,
+    username: newMember.username,
+    displayName: newMember.displayName,
+    role: newMember.role,
+    loginAt: nowIso,
+    device: 'Web Browser'
+  });
+
   saveDb();
   res.status(201).json({ success: true, member: newMember });
 });
@@ -316,10 +394,32 @@ app.post('/api/auth/register', (req, res) => {
 // POST /api/auth/login
 app.post('/api/auth/login', (req, res) => {
   const { emailOrUsername, password } = req.body;
+  const nowIso = new Date().toISOString();
+
+  // Helper to record login activity
+  const recordLoginSuccess = (m: Member) => {
+    m.loginCount = (m.loginCount || 0) + 1;
+    m.lastLoginAt = nowIso;
+    m.isOnline = true;
+    db.totalLogins = (db.totalLogins || 0) + 1;
+    if (!db.loginLogs) db.loginLogs = [];
+    db.loginLogs.unshift({
+      id: `log-${Date.now()}`,
+      memberId: m.id,
+      username: m.username,
+      displayName: m.displayName,
+      role: m.role,
+      loginAt: nowIso,
+      device: req.headers['user-agent'] ? 'Mobile / Web' : 'Browser'
+    });
+    if (db.loginLogs.length > 100) db.loginLogs.pop();
+    saveDb();
+  };
 
   // Preset admin check
   if ((emailOrUsername === 'admin' || emailOrUsername === 'admin@nongkaem888.com') && password === 'admin888') {
     const admin = db.members.find((m) => m.role === 'admin') || db.members[0];
+    recordLoginSuccess(admin);
     return res.json({ success: true, member: admin, token: 'session_token_admin_888' });
   }
 
@@ -334,12 +434,31 @@ app.post('/api/auth/login', (req, res) => {
     return res.status(401).json({ error: 'ไม่พบบัญชีผู้ใช้นี้ หรือรหัสผ่านไม่ถูกต้อง' });
   }
 
+  recordLoginSuccess(member);
   res.json({ success: true, member, token: `session_token_${member.id}` });
+});
+
+// POST /api/auth/logout
+app.post('/api/auth/logout', (req, res) => {
+  const { memberId } = req.body;
+  if (memberId) {
+    const member = db.members.find((m) => m.id === memberId);
+    if (member) {
+      member.isOnline = false;
+      saveDb();
+    }
+  }
+  res.json({ success: true });
 });
 
 // GET /api/members (Admin only)
 app.get('/api/members', (req, res) => {
   res.json(db.members);
+});
+
+// GET /api/members/logs (Admin only - login history)
+app.get('/api/members/logs', (req, res) => {
+  res.json(db.loginLogs || []);
 });
 
 // POST /api/members/:id/favorites

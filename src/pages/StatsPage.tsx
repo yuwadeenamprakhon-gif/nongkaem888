@@ -1,6 +1,6 @@
 import React from 'react';
 import { AppStats, Place } from '../types';
-import { BarChart3, TrendingUp, MapPin, Dice5, Flame, Award, Sparkles } from 'lucide-react';
+import { BarChart3, TrendingUp, MapPin, Dice5, Flame, Award, Sparkles, Users, Activity } from 'lucide-react';
 
 interface StatsPageProps {
   stats: AppStats | null;
@@ -27,10 +27,10 @@ export const StatsPage: React.FC<StatsPageProps> = ({
             <span>Chonburi Insights & Analytics</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight mt-1">
-            แดชบอร์ดสถิติสถานที่และการสุ่ม
+            แดชบอร์ดสถิติสถานที่และการเข้าใช้งาน
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-            ภาพรวมความนิยมและสถิติสถานที่ท่องเที่ยว 105+ แห่งในชลบุรี
+            ภาพรวมสถานที่ท่องเที่ยว 105+ แห่ง พร้อมสถิติผู้เข้าใช้งานและการสุ่มในระบบ
           </p>
         </div>
 
@@ -44,45 +44,72 @@ export const StatsPage: React.FC<StatsPageProps> = ({
       </div>
 
       {/* Metric Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs">
-          <div className="w-10 h-10 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center mb-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5">
+        <div className="bg-white p-4 sm:p-5 rounded-3xl border border-slate-200 shadow-xs">
+          <div className="w-10 h-10 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center mb-2">
             <MapPin className="w-5 h-5" />
           </div>
           <span className="text-xs font-semibold text-slate-500">สถานที่ในชลบุรี</span>
-          <div className="text-3xl font-black text-slate-900 mt-0.5">{places.length}</div>
-          <span className="text-[11px] text-emerald-800 font-medium">ครอบคลุมทุกอำเภอหลัก</span>
+          <div className="text-2xl sm:text-3xl font-black text-slate-900 mt-0.5">{places.length}</div>
+          <span className="text-[11px] text-emerald-800 font-medium">ครอบคลุมทุกอำเภอ</span>
         </div>
 
-        <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs">
-          <div className="w-10 h-10 rounded-2xl bg-rose-100 text-rose-500 flex items-center justify-center mb-3">
+        <div className="bg-white p-4 sm:p-5 rounded-3xl border border-slate-200 shadow-xs">
+          <div className="w-10 h-10 rounded-2xl bg-rose-100 text-rose-500 flex items-center justify-center mb-2">
             <Flame className="w-5 h-5" />
           </div>
           <span className="text-xs font-semibold text-slate-500">สถานที่ยอดนิยม</span>
-          <div className="text-3xl font-black text-rose-600 mt-0.5">
+          <div className="text-2xl sm:text-3xl font-black text-rose-600 mt-0.5">
             {places.filter((p) => p.popular || p.popularityScore >= 80).length}
           </div>
           <span className="text-[11px] text-slate-700">คะแนนความนิยม 80+</span>
         </div>
 
-        <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs">
-          <div className="w-10 h-10 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center mb-3">
+        <div className="bg-white p-4 sm:p-5 rounded-3xl border border-slate-200 shadow-xs">
+          <div className="w-10 h-10 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center mb-2">
             <Dice5 className="w-5 h-5" />
           </div>
           <span className="text-xs font-semibold text-slate-500">จำนวนการสุ่มทั้งหมด</span>
-          <div className="text-3xl font-black text-amber-600 mt-0.5">
+          <div className="text-2xl sm:text-3xl font-black text-amber-600 mt-0.5">
             {stats?.totalRolls || 1480}
           </div>
-          <span className="text-[11px] text-emerald-800 font-medium">+100% สุ่มจากดาต้าจริง</span>
+          <span className="text-[11px] text-emerald-800 font-medium">+100% สุ่มจริง</span>
         </div>
 
-        <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs">
-          <div className="w-10 h-10 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center mb-3">
+        <div className="bg-white p-4 sm:p-5 rounded-3xl border border-slate-200 shadow-xs">
+          <div className="w-10 h-10 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center mb-2">
+            <Users className="w-5 h-5" />
+          </div>
+          <span className="text-xs font-semibold text-slate-500">สมาชิกในระบบ</span>
+          <div className="text-2xl sm:text-3xl font-black text-blue-600 mt-0.5">
+            {stats?.totalMembers || 2}
+          </div>
+          <span className="text-[11px] text-slate-700">ผู้ใช้งานลงทะเบียน</span>
+        </div>
+
+        <div className="bg-white p-4 sm:p-5 rounded-3xl border border-slate-200 shadow-xs">
+          <div className="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mb-2">
+            <Activity className="w-5 h-5" />
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-slate-500">ออนไลน์ตอนนี้</span>
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          </div>
+          <div className="text-2xl sm:text-3xl font-black text-emerald-600 mt-0.5">
+            {stats?.activeUsersNow || 1}
+          </div>
+          <span className="text-[11px] text-emerald-700 font-medium">กำลังเปิดใช้งาน</span>
+        </div>
+
+        <div className="bg-white p-4 sm:p-5 rounded-3xl border border-slate-200 shadow-xs">
+          <div className="w-10 h-10 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center mb-2">
             <Award className="w-5 h-5" />
           </div>
-          <span className="text-xs font-semibold text-slate-500">หมวดหมู่ทั้งหมด</span>
-          <div className="text-3xl font-black text-blue-600 mt-0.5">14</div>
-          <span className="text-[11px] text-slate-700">หลากหลายสไตล์ทริป</span>
+          <span className="text-xs font-semibold text-slate-500">เข้าสู่ระบบทั้งหมด</span>
+          <div className="text-2xl sm:text-3xl font-black text-purple-600 mt-0.5">
+            {stats?.totalLogins || 132}
+          </div>
+          <span className="text-[11px] text-slate-700">รวมทุกเซสชัน</span>
         </div>
       </div>
 

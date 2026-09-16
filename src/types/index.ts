@@ -16,6 +16,7 @@ export interface Place {
   longitude: number;
   googleMapsUrl: string;
   isActive: boolean;
+  gallery?: string[];
   visitCount?: number;
   createdAt?: string;
   updatedAt?: string;
@@ -37,6 +38,19 @@ export interface Member {
     rolledAt: string;
     filterUsed?: string;
   }[];
+  lastLoginAt?: string;
+  loginCount?: number;
+  isOnline?: boolean;
+}
+
+export interface LoginLog {
+  id: string;
+  memberId: string;
+  username: string;
+  displayName: string;
+  role: 'admin' | 'member';
+  loginAt: string;
+  device?: string;
 }
 
 export type FilterType =
@@ -69,6 +83,10 @@ export interface AppStats {
   totalRolls: number;
   totalMembers: number;
   totalCategories: number;
+  totalLogins: number;
+  activeUsersNow: number;
+  loginsToday: number;
+  recentLogins: LoginLog[];
   topRolledPlaces: { placeId: string; name: string; count: number; category: string }[];
   categoryDistribution: { category: string; count: number }[];
   districtDistribution: { district: string; count: number }[];

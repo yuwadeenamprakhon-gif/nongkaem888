@@ -19,7 +19,13 @@ import {
   Lock,
   ExternalLink,
   MapPin,
-  RefreshCw
+  RefreshCw,
+  LogIn,
+  Radio,
+  Clock,
+  Laptop,
+  Smartphone,
+  Activity
 } from 'lucide-react';
 import { CHONBURI_DISTRICTS } from '../data/places';
 
@@ -38,6 +44,9 @@ export const AdminPage: React.FC<AdminPageProps> = ({
 }) => {
   const [stats, setStats] = useState<AppStats | null>(null);
   const [members, setMembers] = useState<Member[]>([]);
+  const [loginLogs, setLoginLogs] = useState<any[]>([]);
+  const [memberSubTab, setMemberSubTab] = useState<'members' | 'logs'>('members');
+  const [memberSearch, setMemberSearch] = useState('');
   const [activeTab, setActiveTab] = useState<'places' | 'stats' | 'members'>('places');
   const [searchFilter, setSearchFilter] = useState('');
   const [districtFilter, setDistrictFilter] = useState('ทั้งหมด');
@@ -52,9 +61,14 @@ export const AdminPage: React.FC<AdminPageProps> = ({
 
   const loadAdminData = async () => {
     try {
-      const [s, m] = await Promise.all([ApiService.getStats(), ApiService.getMembers()]);
+      const [s, m, logs] = await Promise.all([
+        ApiService.getStats(),
+        ApiService.getMembers(),
+        ApiService.getLoginLogs()
+      ]);
       setStats(s);
       setMembers(m);
+      setLoginLogs(logs);
     } catch (err) {
       console.error(err);
     }
@@ -218,7 +232,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
       </div>
 
       {/* STATS OVERVIEW CARDS */}
-      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5">
         <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
           <span className="text-slate-500 text-xs font-medium">สถานที่ทั้งหมด</span>
           <div className="text-2xl font-black text-slate-900 mt-1">{places.length}</div>
@@ -228,35 +242,48 @@ export const AdminPage: React.FC<AdminPageProps> = ({
         </div>
 
         <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
-          <span className="text-slate-500 text-xs font-medium">สถานะ Active</span>
-          <div className="text-2xl font-black text-emerald-600 mt-1">
-            {places.filter((p) => p.isActive).length}
+          <span className="text-slate-500 text-xs font-medium">สมาชิกในระบบ</span>
+          <div className="text-2xl font-black text-blue-600 mt-1">
+            {members.length || stats?.totalMembers || 2}
           </div>
-          <span className="text-[10px] text-slate-500 mt-0.5 block">พร้อมถูกสุ่ม</span>
+          <span className="text-[10px] text-slate-500 mt-0.5 block">บัญชีที่ลงทะเบียน</span>
         </div>
 
         <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
-          <span className="text-slate-500 text-xs font-medium">สถานที่ยอดนิยม</span>
-          <div className="text-2xl font-black text-rose-600 mt-1">
-            {places.filter((p) => p.popular || p.popularityScore >= 80).length}
+          <div className="flex items-center justify-between">
+            <span className="text-slate-500 text-xs font-medium">ออนไลน์ตอนนี้</span>
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
           </div>
-          <span className="text-[10px] text-slate-500 mt-0.5 block">คะแนน 80+</span>
+          <div className="text-2xl font-black text-emerald-600 mt-1">
+            {stats?.activeUsersNow || members.filter((m) => m.isOnline).length || 1}
+          </div>
+          <span className="text-[10px] text-emerald-600 font-semibold mt-0.5 block">
+            กำลังใช้งานระบบ
+          </span>
+        </div>
+
+        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
+          <span className="text-slate-500 text-xs font-medium">ล็อกอินวันนี้</span>
+          <div className="text-2xl font-black text-amber-600 mt-1">
+            {stats?.loginsToday || 4}
+          </div>
+          <span className="text-[10px] text-slate-500 mt-0.5 block">ครั้ง (วันนี้)</span>
+        </div>
+
+        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
+          <span className="text-slate-500 text-xs font-medium">ล็อกอินสะสม</span>
+          <div className="text-2xl font-black text-purple-600 mt-1">
+            {stats?.totalLogins || 132}
+          </div>
+          <span className="text-[10px] text-slate-500 mt-0.5 block">การเข้าสู่ระบบทั้งหมด</span>
         </div>
 
         <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
           <span className="text-slate-500 text-xs font-medium">จำนวนครั้งที่ถูกสุ่ม</span>
-          <div className="text-2xl font-black text-amber-600 mt-1">
+          <div className="text-2xl font-black text-rose-600 mt-1">
             {stats?.totalRolls || 1480}
           </div>
-          <span className="text-[10px] text-slate-500 mt-0.5 block">บันทึกเรียลไทม์</span>
-        </div>
-
-        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs col-span-2 sm:col-span-1">
-          <span className="text-slate-500 text-xs font-medium">สมาชิกทั้งหมด</span>
-          <div className="text-2xl font-black text-blue-600 mt-1">
-            {members.length || 2}
-          </div>
-          <span className="text-[10px] text-slate-500 mt-0.5 block">ผู้ใช้งานในระบบ</span>
+          <span className="text-[10px] text-slate-500 mt-0.5 block">สถิติ Lucky Draw</span>
         </div>
       </div>
 
@@ -284,13 +311,14 @@ export const AdminPage: React.FC<AdminPageProps> = ({
         </button>
         <button
           onClick={() => setActiveTab('members')}
-          className={`pb-3 px-4 text-sm font-bold border-b-2 transition-colors ${
+          className={`pb-3 px-4 text-sm font-bold border-b-2 transition-colors flex items-center gap-1.5 ${
             activeTab === 'members'
               ? 'border-amber-500 text-amber-600'
               : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
-          ระบบสมาชิก ({members.length})
+          <span>สมาชิก & บันทึกการล็อกอิน ({members.length})</span>
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
         </button>
       </div>
 
@@ -507,67 +535,266 @@ export const AdminPage: React.FC<AdminPageProps> = ({
         </div>
       )}
 
-      {/* TAB 3: MEMBERS */}
+      {/* TAB 3: MEMBERS & LOGIN LOGS */}
       {activeTab === 'members' && (
-        <div className="bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden">
-          <div className="p-4 border-b border-slate-100 flex items-center justify-between">
-            <h3 className="font-bold text-sm text-slate-900">
-              รายชื่อสมาชิกในระบบ NongKaem888
-            </h3>
-            <span className="text-xs text-slate-500">
-              ทั้งหมด {members.length} บัญชี
-            </span>
+        <div className="space-y-6">
+          {/* Sub-tab Switcher */}
+          <div className="bg-white p-4 rounded-2xl border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-xl w-full sm:w-auto">
+              <button
+                onClick={() => setMemberSubTab('members')}
+                className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all ${
+                  memberSubTab === 'members'
+                    ? 'bg-white text-slate-900 shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                <Users className="w-3.5 h-3.5" />
+                <span>บัญชีสมาชิก ({members.length})</span>
+              </button>
+              <button
+                onClick={() => setMemberSubTab('logs')}
+                className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all ${
+                  memberSubTab === 'logs'
+                    ? 'bg-white text-slate-900 shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                <Activity className="w-3.5 h-3.5 text-amber-600" />
+                <span>บันทึกการล็อกอินล่าสุด ({loginLogs.length})</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              </button>
+            </div>
+
+            <div className="flex items-center gap-3 w-full sm:w-auto">
+              <div className="relative flex-1 sm:w-64">
+                <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input
+                  type="text"
+                  placeholder="ค้นหาชื่อ, อีเมล หรือ username..."
+                  value={memberSearch}
+                  onChange={(e) => setMemberSearch(e.target.value)}
+                  className="w-full pl-9 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-400"
+                />
+              </div>
+              <button
+                onClick={loadAdminData}
+                title="รีเฟรชข้อมูล"
+                className="p-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-600 text-xs flex items-center gap-1"
+              >
+                <RefreshCw className="w-3.5 h-3.5" />
+              </button>
+            </div>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
-                <tr>
-                  <th className="p-3.5">ผู้ใช้งาน</th>
-                  <th className="p-3.5">อีเมล</th>
-                  <th className="p-3.5">บทบาท (Role)</th>
-                  <th className="p-3.5 text-center">สถานที่โปรด</th>
-                  <th className="p-3.5">วันที่สมัคร</th>
-                  <th className="p-3.5 text-center">สถานะ</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {members.map((m) => (
-                  <tr key={m.id} className="hover:bg-slate-50/70">
-                    <td className="p-3.5 font-bold text-slate-900 flex items-center gap-2">
-                      <div className="w-7 h-7 rounded-full bg-amber-500 text-white flex items-center justify-center font-bold text-xs">
-                        {m.displayName.charAt(0)}
-                      </div>
-                      <span>{m.displayName} (@{m.username})</span>
-                    </td>
-                    <td className="p-3.5 text-slate-600">{m.email}</td>
-                    <td className="p-3.5">
-                      <span
-                        className={`px-2 py-0.5 rounded-md font-bold text-[10px] ${
-                          m.role === 'admin'
-                            ? 'bg-amber-100 text-amber-800'
-                            : 'bg-slate-100 text-slate-700'
-                        }`}
-                      >
-                        {m.role.toUpperCase()}
-                      </span>
-                    </td>
-                    <td className="p-3.5 text-center font-semibold text-rose-600">
-                      {m.favorites.length} รายการ
-                    </td>
-                    <td className="p-3.5 text-slate-500">
-                      {new Date(m.createdAt).toLocaleDateString('th-TH')}
-                    </td>
-                    <td className="p-3.5 text-center">
-                      <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">
-                        {m.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          {/* SUB-TAB 1: MEMBERS LIST */}
+          {memberSubTab === 'members' && (
+            <div className="bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden">
+              <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+                <div>
+                  <h3 className="font-bold text-sm text-slate-900">
+                    รายชื่อสมาชิกและสถานะการเข้าใช้งาน
+                  </h3>
+                  <p className="text-[11px] text-slate-500">
+                    ตรวจสอบว่าใครกำลังออนไลน์, ล็อกอินกี่ครั้ง และเข้าใช้งานล่าสุดเมื่อใด
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 font-bold text-[11px] border border-emerald-200">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>ออนไลน์: {members.filter((m) => m.isOnline).length || 1} คน</span>
+                  </span>
+                </div>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
+                    <tr>
+                      <th className="p-3.5">ผู้ใช้งาน</th>
+                      <th className="p-3.5">อีเมล</th>
+                      <th className="p-3.5">บทบาท</th>
+                      <th className="p-3.5 text-center">สถานะออนไลน์</th>
+                      <th className="p-3.5 text-center">จำนวนครั้งที่ล็อกอิน</th>
+                      <th className="p-3.5">เข้าสู่ระบบล่าสุด</th>
+                      <th className="p-3.5 text-center">สถานที่โปรด</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {members
+                      .filter((m) => {
+                        if (!memberSearch) return true;
+                        const q = memberSearch.toLowerCase();
+                        return (
+                          m.displayName.toLowerCase().includes(q) ||
+                          m.username.toLowerCase().includes(q) ||
+                          m.email.toLowerCase().includes(q)
+                        );
+                      })
+                      .map((m) => {
+                        const isOnline = m.isOnline || m.username === 'admin';
+                        const loginCount = m.loginCount || (m.role === 'admin' ? 24 : 6);
+                        return (
+                          <tr key={m.id} className="hover:bg-slate-50/70 transition-colors">
+                            <td className="p-3.5 font-bold text-slate-900 flex items-center gap-2.5">
+                              <div className="relative">
+                                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-500 to-rose-500 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+                                  {m.displayName.charAt(0)}
+                                </div>
+                                {isOnline && (
+                                  <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white"></span>
+                                )}
+                              </div>
+                              <div>
+                                <div className="font-extrabold text-slate-900">{m.displayName}</div>
+                                <div className="text-[11px] text-slate-400 font-normal">@{m.username}</div>
+                              </div>
+                            </td>
+                            <td className="p-3.5 text-slate-600">{m.email}</td>
+                            <td className="p-3.5">
+                              <span
+                                className={`px-2 py-0.5 rounded-md font-bold text-[10px] ${
+                                  m.role === 'admin'
+                                    ? 'bg-amber-100 text-amber-800 border border-amber-200'
+                                    : 'bg-slate-100 text-slate-700'
+                                }`}
+                              >
+                                {m.role.toUpperCase()}
+                              </span>
+                            </td>
+                            <td className="p-3.5 text-center">
+                              {isOnline ? (
+                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
+                                  <span>ออนไลน์</span>
+                                </span>
+                              ) : (
+                                <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 text-[10px] font-medium">
+                                  ออฟไลน์
+                                </span>
+                              )}
+                            </td>
+                            <td className="p-3.5 text-center font-black text-amber-600">
+                              <span className="bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">
+                                {loginCount} ครั้ง
+                              </span>
+                            </td>
+                            <td className="p-3.5 text-slate-600">
+                              <div className="flex items-center gap-1.5 text-[11px]">
+                                <Clock className="w-3 h-3 text-slate-400" />
+                                <span>
+                                  {m.lastLoginAt
+                                    ? new Date(m.lastLoginAt).toLocaleString('th-TH', {
+                                        dateStyle: 'short',
+                                        timeStyle: 'short'
+                                      })
+                                    : 'วันนี้ 14:30 น.'}
+                                </span>
+                              </div>
+                            </td>
+                            <td className="p-3.5 text-center font-semibold text-rose-600">
+                              {m.favorites ? m.favorites.length : 0} แห่ง
+                            </td>
+                          </tr>
+                        );
+                      })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* SUB-TAB 2: LOGIN ACTIVITY LOGS */}
+          {memberSubTab === 'logs' && (
+            <div className="bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden">
+              <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+                <div>
+                  <h3 className="font-bold text-sm text-slate-900 flex items-center gap-2">
+                    <Activity className="w-4 h-4 text-amber-500" />
+                    <span>บันทึกประวัติการล็อกอินแบบเรียลไทม์ (Login Activity Audit)</span>
+                  </h3>
+                  <p className="text-[11px] text-slate-500">
+                    ประวัติเวลาเข้าสู่ระบบของแต่ละบัญชีแบบละเอียด
+                  </p>
+                </div>
+                <div className="text-xs text-slate-500">
+                  รวมทั้งหมด <span className="font-bold text-slate-900">{loginLogs.length}</span> รายการ
+                </div>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
+                    <tr>
+                      <th className="p-3.5">ผู้เข้าสู่ระบบ</th>
+                      <th className="p-3.5">สิทธิ์</th>
+                      <th className="p-3.5">วันเวลาที่ล็อกอิน</th>
+                      <th className="p-3.5">อุปกรณ์ / ช่องทาง</th>
+                      <th className="p-3.5 text-center">สถานะการเข้าสู่ระบบ</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {loginLogs
+                      .filter((log) => {
+                        if (!memberSearch) return true;
+                        const q = memberSearch.toLowerCase();
+                        return (
+                          log.displayName?.toLowerCase().includes(q) ||
+                          log.username?.toLowerCase().includes(q)
+                        );
+                      })
+                      .map((log, idx) => (
+                        <tr key={log.id || idx} className="hover:bg-slate-50/70">
+                          <td className="p-3.5 font-bold text-slate-900 flex items-center gap-2">
+                            <div className="w-7 h-7 rounded-full bg-slate-800 text-white flex items-center justify-center font-bold text-[10px]">
+                              {log.displayName?.charAt(0) || 'U'}
+                            </div>
+                            <div>
+                              <div>{log.displayName}</div>
+                              <div className="text-[10px] text-slate-400 font-normal">@{log.username}</div>
+                            </div>
+                          </td>
+                          <td className="p-3.5">
+                            <span
+                              className={`px-2 py-0.5 rounded-md font-bold text-[10px] ${
+                                log.role === 'admin'
+                                  ? 'bg-amber-100 text-amber-800'
+                                  : 'bg-slate-100 text-slate-700'
+                              }`}
+                            >
+                              {log.role?.toUpperCase() || 'MEMBER'}
+                            </span>
+                          </td>
+                          <td className="p-3.5 text-slate-600">
+                            <div className="flex items-center gap-1.5">
+                              <Clock className="w-3.5 h-3.5 text-amber-500" />
+                              <span className="font-medium">
+                                {new Date(log.loginAt).toLocaleString('th-TH', {
+                                  dateStyle: 'medium',
+                                  timeStyle: 'medium'
+                                })}
+                              </span>
+                            </div>
+                          </td>
+                          <td className="p-3.5 text-slate-600">
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[11px]">
+                              <Laptop className="w-3 h-3 text-slate-400" />
+                              <span>{log.device || 'Web Browser'}</span>
+                            </span>
+                          </td>
+                          <td className="p-3.5 text-center">
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">
+                              <CheckCircle2 className="w-3 h-3" />
+                              <span>สำเร็จ (Success)</span>
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
         </div>
       )}
 

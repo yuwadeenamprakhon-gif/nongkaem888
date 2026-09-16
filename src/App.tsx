@@ -137,20 +137,30 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50/50 flex flex-col font-sans text-slate-800 antialiased selection:bg-amber-500 selection:text-white">
+    <div className="min-h-screen bg-[#070817] flex flex-col font-sans text-slate-100 antialiased selection:bg-fuchsia-500 selection:text-white relative overflow-x-hidden">
+      {/* Ambient Neon Atmosphere (Navy - Purple - Magenta) */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div className="absolute -top-32 -left-32 w-[550px] h-[550px] rounded-full bg-indigo-600/15 blur-[120px]" />
+        <div className="absolute top-1/4 right-0 w-[500px] h-[500px] rounded-full bg-fuchsia-600/12 blur-[130px]" />
+        <div className="absolute top-2/3 left-1/3 w-[600px] h-[600px] rounded-full bg-purple-600/10 blur-[140px]" />
+        <div className="absolute -bottom-32 right-10 w-[500px] h-[500px] rounded-full bg-pink-600/10 blur-[120px]" />
+      </div>
+
       {/* Top Navbar */}
-      <Navbar
-        currentTab={currentTab}
-        setCurrentTab={setCurrentTab}
-        currentUser={currentUser}
-        onOpenAuth={() => setIsAuthOpen(true)}
-        onLogout={handleLogout}
-        onOpenDeployGuide={() => setIsDeployGuideOpen(true)}
-        placesCount={places.length}
-      />
+      <div className="relative z-10">
+        <Navbar
+          currentTab={currentTab}
+          setCurrentTab={setCurrentTab}
+          currentUser={currentUser}
+          onOpenAuth={() => setIsAuthOpen(true)}
+          onLogout={handleLogout}
+          onOpenDeployGuide={() => setIsDeployGuideOpen(true)}
+          placesCount={places.length}
+        />
+      </div>
 
       {/* Main App Body */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6 relative z-10">
         {currentTab === 'home' && (
           <HomePage
             places={places}
@@ -217,14 +227,14 @@ export default function App() {
       </main>
 
       {/* FOOTER */}
-      <footer className="bg-white border-t border-slate-200 mt-auto py-8">
+      <footer className="bg-[#050612]/90 border-t border-purple-900/40 mt-auto py-8 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-700">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
             <div className="flex items-center gap-2">
-              <span className="font-extrabold text-sm text-slate-900">
+              <span className="font-extrabold text-sm bg-gradient-to-r from-purple-400 via-pink-400 to-rose-400 bg-clip-text text-transparent">
                 NongKaem888 – “วันนี้ไปไหนดี?”
               </span>
-              <span className="text-[10px] bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded-full">
+              <span className="text-[10px] bg-purple-950 text-pink-300 font-bold px-2 py-0.5 rounded-full border border-purple-500/40">
                 ชลบุรี
               </span>
             </div>
@@ -232,37 +242,37 @@ export default function App() {
             <div className="flex flex-wrap items-center justify-center gap-4">
               <button
                 onClick={() => setCurrentTab('home')}
-                className="hover:text-amber-600 transition-colors"
+                className="hover:text-pink-400 transition-colors"
               >
                 สุ่มที่เที่ยว
               </button>
               <button
                 onClick={() => setCurrentTab('directory')}
-                className="hover:text-amber-600 transition-colors"
+                className="hover:text-pink-400 transition-colors"
               >
                 สถานที่ทั้งหมด ({places.length})
               </button>
               <button
                 onClick={() => setCurrentTab('stats')}
-                className="hover:text-amber-600 transition-colors"
+                className="hover:text-pink-400 transition-colors"
               >
                 แดชบอร์ดสถิติ
               </button>
               <button
                 onClick={() => setCurrentTab('timeline')}
-                className="hover:text-amber-600 transition-colors"
+                className="hover:text-pink-400 transition-colors"
               >
                 Project Timeline
               </button>
               <button
                 onClick={() => setIsDeployGuideOpen(true)}
-                className="text-amber-600 font-semibold hover:underline"
+                className="text-pink-400 font-semibold hover:underline"
               >
                 คู่มือ GitHub & Vercel
               </button>
             </div>
 
-            <p className="text-slate-700 text-center sm:text-right">
+            <p className="text-slate-400 text-center sm:text-right">
               ระบบสุ่มสถานที่จริงในจังหวัดชลบุรี • ข้อมูลอัปเดต 2026
             </p>
           </div>

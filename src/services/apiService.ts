@@ -170,6 +170,29 @@ export class ApiService {
       totalRolls: Number(localStorage.getItem(STORAGE_KEY_ROLLS) || '1480'),
       totalMembers: 2,
       totalCategories: Object.keys(catMap).length,
+      totalLogins: 128,
+      activeUsersNow: 2,
+      loginsToday: 6,
+      recentLogins: [
+        {
+          id: 'log-1',
+          memberId: 'usr-admin',
+          username: 'admin',
+          displayName: 'แอดมิน NongKaem888',
+          role: 'admin',
+          loginAt: new Date().toISOString(),
+          device: 'Web Browser'
+        },
+        {
+          id: 'log-2',
+          memberId: 'usr-demo',
+          username: 'traveler888',
+          displayName: 'นักเดินทางแก้มใส',
+          role: 'member',
+          loginAt: new Date(Date.now() - 3600000).toISOString(),
+          device: 'Mobile'
+        }
+      ],
       topRolledPlaces: places.slice(0, 5).map((p) => ({
         placeId: p.id,
         name: p.name,
@@ -299,6 +322,20 @@ export class ApiService {
     return [];
   }
 
+  static async logout(): Promise<void> {
+    const curUser = this.getCurrentUser();
+    if (curUser) {
+      try {
+        await fetch('/api/auth/logout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ memberId: curUser.id })
+        });
+      } catch {}
+    }
+    this.setCurrentUser(null);
+  }
+
   static async getMembers(): Promise<Member[]> {
     try {
       const res = await fetch('/api/members');
@@ -314,7 +351,42 @@ export class ApiService {
         createdAt: '2026-01-15T09:00:00.000Z',
         status: 'active',
         favorites: ['pat-001', 'bs-001'],
-        history: []
+        history: [],
+        lastLoginAt: new Date().toISOString(),
+        loginCount: 24,
+        isOnline: true
+      },
+      {
+        id: 'usr-demo',
+        username: 'traveler888',
+        email: 'user@nongkaem888.com',
+        displayName: 'นักเดินทางแก้มใส',
+        role: 'member',
+        createdAt: '2026-02-01T11:20:00.000Z',
+        status: 'active',
+        favorites: ['bs-015'],
+        history: [],
+        lastLoginAt: new Date(Date.now() - 3600000).toISOString(),
+        loginCount: 8,
+        isOnline: true
+      }
+    ];
+  }
+
+  static async getLoginLogs(): Promise<any[]> {
+    try {
+      const res = await fetch('/api/members/logs');
+      if (res.ok) return await res.json();
+    } catch {}
+    return [
+      {
+        id: 'log-1',
+        memberId: 'usr-admin',
+        username: 'admin',
+        displayName: 'แอดมิน NongKaem888',
+        role: 'admin',
+        loginAt: new Date().toISOString(),
+        device: 'Web Browser'
       }
     ];
   }
