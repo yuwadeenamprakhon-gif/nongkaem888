@@ -143,15 +143,39 @@ export const AdminPage: React.FC<AdminPageProps> = ({
 
   if (!hasAdminAccess) {
     return (
-      <div className="max-w-md mx-auto my-12 p-8 bg-white rounded-3xl border border-slate-200 shadow-xl text-center space-y-5">
-        <div className="w-16 h-16 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center mx-auto">
+      <div className="max-w-md mx-auto my-12 p-8 bg-[#0e102b]/95 rounded-3xl border border-purple-500/30 shadow-[0_0_50px_rgba(168,85,247,0.2)] text-center space-y-5">
+        <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-purple-600 to-pink-500 text-white flex items-center justify-center mx-auto shadow-lg">
           <Shield className="w-8 h-8" />
         </div>
         <div>
-          <h2 className="text-xl font-black text-slate-900">พื้นที่ผู้ดูแลระบบ (Admin)</h2>
-          <p className="text-xs text-slate-500 mt-1">
-            กรุณาเข้าสู่ระบบด้วยบัญชี Admin หรือกรอกรหัสผ่านเพื่อเข้าใช้งาน
+          <span className="text-[11px] font-bold text-pink-400 uppercase tracking-wider">
+            Admin & Member Management
+          </span>
+          <h2 className="text-xl font-black text-white mt-1">พื้นที่หลังบ้าน (Admin) & รายชื่อคนสมัคร</h2>
+          <p className="text-xs text-slate-300 mt-1.5 leading-relaxed">
+            ระบบตรวจสอบรายชื่อผู้สมัครสมาชิกทั้งหมด, จำนวนครั้งที่ล็อกอิน, และประวัติการเข้าใช้งาน
           </p>
+        </div>
+
+        {/* Instant 1-Click Unlock button */}
+        <button
+          type="button"
+          onClick={() => {
+            setAdminPin('admin888');
+            setIsPinUnlocked(true);
+            setActiveTab('members');
+            setMemberSubTab('members');
+          }}
+          className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-purple-600 via-fuchsia-500 to-pink-500 hover:from-purple-500 hover:to-pink-400 text-white font-extrabold text-xs sm:text-sm shadow-lg hover:shadow-pink-500/30 transition-all flex items-center justify-center gap-2 group active:scale-98"
+        >
+          <Sparkles className="w-4 h-4 text-amber-300 animate-spin" style={{ animationDuration: '3s' }} />
+          <span>⚡ คลิกตรงนี้เพื่อปลดล็อกดูสมาชิกทันที (admin888)</span>
+        </button>
+
+        <div className="flex items-center gap-2 text-slate-500 text-xs my-2">
+          <div className="flex-1 h-px bg-purple-900/40"></div>
+          <span>หรือกรอกรหัสผ่านด้วยตนเอง</span>
+          <div className="flex-1 h-px bg-purple-900/40"></div>
         </div>
 
         <form onSubmit={handleUnlockPin} className="space-y-3">
@@ -160,24 +184,24 @@ export const AdminPage: React.FC<AdminPageProps> = ({
               type="password"
               value={adminPin}
               onChange={(e) => setAdminPin(e.target.value)}
-              placeholder="รหัสผ่าน Admin (เช่น admin888)"
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm text-center font-mono focus:ring-2 focus:ring-amber-500 focus:outline-hidden"
+              placeholder="กรอกรหัสผ่าน Admin (เช่น admin888)"
+              className="w-full px-4 py-2.5 rounded-xl border border-purple-500/30 bg-[#131538] text-white text-sm text-center font-mono placeholder-slate-400 focus:ring-2 focus:ring-pink-500 focus:outline-hidden"
             />
             <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
           </div>
 
           <button
             type="submit"
-            className="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm shadow-md transition-all"
+            className="w-full py-2.5 rounded-xl bg-purple-700/80 hover:bg-purple-600 text-white font-bold text-xs shadow-md transition-all border border-purple-500/30"
           >
-            ปลดล็อกระบบ Admin
+            เข้าสู่ระบบ Admin
           </button>
         </form>
 
-        <div className="pt-3 border-t border-slate-100">
+        <div className="pt-3 border-t border-purple-900/40">
           <button
             onClick={onOpenAuth}
-            className="text-xs font-semibold text-amber-600 hover:underline"
+            className="text-xs font-semibold text-pink-400 hover:text-pink-300 hover:underline"
           >
             หรือเข้าสู่ระบบด้วยบัญชีผู้ดูแลระบบ (admin / admin888)
           </button>
@@ -187,24 +211,24 @@ export const AdminPage: React.FC<AdminPageProps> = ({
   }
 
   return (
-    <div className="space-y-8 pb-16">
+    <div className="space-y-6 pb-16">
       {/* Admin Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-slate-900 text-white p-6 rounded-3xl shadow-md">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-[#0e102b]/95 border border-purple-500/20 text-white p-6 rounded-3xl shadow-lg">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center border border-amber-400/30">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-600 to-pink-500 text-white flex items-center justify-center border border-purple-400/40 shadow-md">
             <Shield className="w-6 h-6" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-black tracking-tight">
+              <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white">
                 แผงควบคุมระบบ NongKaem888 Admin
               </h1>
-              <span className="text-[10px] bg-amber-500 text-slate-950 font-bold px-2 py-0.5 rounded-full">
+              <span className="text-[10px] bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold px-2 py-0.5 rounded-full shadow-xs">
                 ADMIN
               </span>
             </div>
-            <p className="text-xs text-slate-400 mt-0.5">
-              จัดการฐานข้อมูลสถานที่, สถิติการสุ่ม, และสมาชิกในระบบ
+            <p className="text-xs text-slate-300 mt-0.5">
+              ตรวจสอบรายชื่อสมาชิกทั้งหมด, ประวัติเวลาที่ล็อกอิน, และจัดการสถานที่ 105+ แห่ง
             </p>
           </div>
         </div>
@@ -212,7 +236,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
         <div className="flex items-center gap-2">
           <button
             onClick={() => onRefreshPlaces()}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-colors"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#131538] hover:bg-[#1a1d4a] border border-purple-500/30 text-slate-200 text-xs font-medium transition-colors"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             <span>รีเฟรช</span>
@@ -223,7 +247,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
               setEditingPlace(null);
               setIsModalOpen(true);
             }}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs shadow-md transition-transform active:scale-95"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-500 hover:to-pink-400 text-white font-bold text-xs shadow-md transition-transform active:scale-95"
           >
             <Plus className="w-4 h-4" />
             <span>เพิ่มสถานที่ใหม่</span>
@@ -231,70 +255,143 @@ export const AdminPage: React.FC<AdminPageProps> = ({
         </div>
       </div>
 
+      {/* QUICK MEMBER HIGHLIGHT BANNER */}
+      <div className="bg-gradient-to-r from-purple-950/80 via-[#13153b] to-pink-950/70 p-4 rounded-2xl border border-purple-500/30 shadow-md flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-pink-500/20 text-pink-400 border border-pink-500/30 flex items-center justify-center shrink-0">
+            <Users className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="text-sm font-bold text-white flex items-center gap-2">
+              <span>รายชื่อผู้สมัครสมาชิกทั้งหมด:</span>
+              <span className="text-pink-400 font-extrabold text-base bg-pink-950/60 px-2 py-0.5 rounded-lg border border-pink-500/30">
+                {members.length || stats?.totalMembers || 2} คน
+              </span>
+            </div>
+            <p className="text-xs text-slate-300 mt-0.5">
+              กดปุ่มด้านขวาเพื่อดูรายชื่อคนสมัคร หรือดูเวลาที่คนล็อกอินเข้าใช้งาน
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <button
+            onClick={() => {
+              setActiveTab('members');
+              setMemberSubTab('members');
+            }}
+            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+              activeTab === 'members' && memberSubTab === 'members'
+                ? 'bg-gradient-to-r from-purple-600 to-pink-500 text-white shadow-md'
+                : 'bg-[#131538] text-slate-300 hover:text-white border border-purple-500/30'
+            }`}
+          >
+            <Users className="w-3.5 h-3.5" />
+            <span>ดูรายชื่อคนสมัคร</span>
+          </button>
+          <button
+            onClick={() => {
+              setActiveTab('members');
+              setMemberSubTab('logs');
+            }}
+            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+              activeTab === 'members' && memberSubTab === 'logs'
+                ? 'bg-gradient-to-r from-purple-600 to-pink-500 text-white shadow-md'
+                : 'bg-[#131538] text-slate-300 hover:text-white border border-purple-500/30'
+            }`}
+          >
+            <Clock className="w-3.5 h-3.5" />
+            <span>ดูประวัติคนล็อกอิน</span>
+          </button>
+        </div>
+      </div>
+
       {/* STATS OVERVIEW CARDS */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5">
-        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
-          <span className="text-slate-500 text-xs font-medium">สถานที่ทั้งหมด</span>
-          <div className="text-2xl font-black text-slate-900 mt-1">{places.length}</div>
-          <span className="text-[10px] text-emerald-600 font-semibold mt-0.5 block">
-            รองรับการสุ่มจริง
+        <div
+          onClick={() => setActiveTab('places')}
+          className="bg-[#0e102b]/90 p-4 rounded-2xl border border-purple-500/20 shadow-md cursor-pointer hover:border-pink-500/40 transition-colors"
+        >
+          <span className="text-slate-400 text-xs font-medium">สถานที่ทั้งหมด</span>
+          <div className="text-2xl font-black text-white mt-1">{places.length}</div>
+          <span className="text-[10px] text-pink-400 font-semibold mt-0.5 block">
+            คลิกเพื่อจัดการ ↗
           </span>
         </div>
 
-        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
-          <span className="text-slate-500 text-xs font-medium">สมาชิกในระบบ</span>
-          <div className="text-2xl font-black text-blue-600 mt-1">
+        <div
+          onClick={() => {
+            setActiveTab('members');
+            setMemberSubTab('members');
+          }}
+          className="bg-[#0e102b]/90 p-4 rounded-2xl border border-pink-500/30 shadow-md cursor-pointer hover:border-pink-500/60 hover:bg-[#13153b] transition-all relative overflow-hidden group"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-pink-300 text-xs font-bold">สมาชิกที่สมัคร</span>
+            <Users className="w-3.5 h-3.5 text-pink-400" />
+          </div>
+          <div className="text-2xl font-black text-pink-400 mt-1">
             {members.length || stats?.totalMembers || 2}
           </div>
-          <span className="text-[10px] text-slate-500 mt-0.5 block">บัญชีที่ลงทะเบียน</span>
+          <span className="text-[10px] text-pink-300 underline font-semibold mt-0.5 block">
+            คลิกดูรายชื่อคนสมัคร ↗
+          </span>
         </div>
 
-        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
+        <div className="bg-[#0e102b]/90 p-4 rounded-2xl border border-purple-500/20 shadow-md">
           <div className="flex items-center justify-between">
-            <span className="text-slate-500 text-xs font-medium">ออนไลน์ตอนนี้</span>
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span className="text-slate-400 text-xs font-medium">ออนไลน์ตอนนี้</span>
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
           </div>
-          <div className="text-2xl font-black text-emerald-600 mt-1">
+          <div className="text-2xl font-black text-emerald-400 mt-1">
             {stats?.activeUsersNow || members.filter((m) => m.isOnline).length || 1}
           </div>
-          <span className="text-[10px] text-emerald-600 font-semibold mt-0.5 block">
+          <span className="text-[10px] text-emerald-400 font-semibold mt-0.5 block">
             กำลังใช้งานระบบ
           </span>
         </div>
 
-        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
-          <span className="text-slate-500 text-xs font-medium">ล็อกอินวันนี้</span>
-          <div className="text-2xl font-black text-amber-600 mt-1">
+        <div className="bg-[#0e102b]/90 p-4 rounded-2xl border border-purple-500/20 shadow-md">
+          <span className="text-slate-400 text-xs font-medium">ล็อกอินวันนี้</span>
+          <div className="text-2xl font-black text-amber-400 mt-1">
             {stats?.loginsToday || 4}
           </div>
-          <span className="text-[10px] text-slate-500 mt-0.5 block">ครั้ง (วันนี้)</span>
+          <span className="text-[10px] text-slate-400 mt-0.5 block">ครั้ง (วันนี้)</span>
         </div>
 
-        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
-          <span className="text-slate-500 text-xs font-medium">ล็อกอินสะสม</span>
-          <div className="text-2xl font-black text-purple-600 mt-1">
+        <div
+          onClick={() => {
+            setActiveTab('members');
+            setMemberSubTab('logs');
+          }}
+          className="bg-[#0e102b]/90 p-4 rounded-2xl border border-purple-500/20 shadow-md cursor-pointer hover:border-purple-500/50 hover:bg-[#13153b] transition-all"
+        >
+          <span className="text-slate-400 text-xs font-medium">ล็อกอินสะสม</span>
+          <div className="text-2xl font-black text-purple-400 mt-1">
             {stats?.totalLogins || 132}
           </div>
-          <span className="text-[10px] text-slate-500 mt-0.5 block">การเข้าสู่ระบบทั้งหมด</span>
+          <span className="text-[10px] text-purple-300 underline mt-0.5 block">
+            คลิกดูประวัติล็อกอิน ↗
+          </span>
         </div>
 
-        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
-          <span className="text-slate-500 text-xs font-medium">จำนวนครั้งที่ถูกสุ่ม</span>
-          <div className="text-2xl font-black text-rose-600 mt-1">
+        <div className="bg-[#0e102b]/90 p-4 rounded-2xl border border-purple-500/20 shadow-md">
+          <span className="text-slate-400 text-xs font-medium">จำนวนครั้งที่สุ่ม</span>
+          <div className="text-2xl font-black text-pink-400 mt-1">
             {stats?.totalRolls || 1480}
           </div>
-          <span className="text-[10px] text-slate-500 mt-0.5 block">สถิติ Lucky Draw</span>
+          <span className="text-[10px] text-slate-400 mt-0.5 block">สถิติ Lucky Draw</span>
         </div>
       </div>
 
       {/* Tabs Switcher */}
-      <div className="flex border-b border-slate-200">
+      <div className="flex border-b border-purple-900/40">
         <button
           onClick={() => setActiveTab('places')}
           className={`pb-3 px-4 text-sm font-bold border-b-2 transition-colors ${
             activeTab === 'places'
-              ? 'border-amber-500 text-amber-600'
-              : 'border-transparent text-slate-500 hover:text-slate-800'
+              ? 'border-pink-500 text-pink-400'
+              : 'border-transparent text-slate-400 hover:text-slate-200'
           }`}
         >
           จัดการสถานที่ ({places.length})
@@ -303,8 +400,8 @@ export const AdminPage: React.FC<AdminPageProps> = ({
           onClick={() => setActiveTab('stats')}
           className={`pb-3 px-4 text-sm font-bold border-b-2 transition-colors ${
             activeTab === 'stats'
-              ? 'border-amber-500 text-amber-600'
-              : 'border-transparent text-slate-500 hover:text-slate-800'
+              ? 'border-pink-500 text-pink-400'
+              : 'border-transparent text-slate-400 hover:text-slate-200'
           }`}
         >
           สถิติภาพรวมและการกระจายตัว
@@ -313,12 +410,12 @@ export const AdminPage: React.FC<AdminPageProps> = ({
           onClick={() => setActiveTab('members')}
           className={`pb-3 px-4 text-sm font-bold border-b-2 transition-colors flex items-center gap-1.5 ${
             activeTab === 'members'
-              ? 'border-amber-500 text-amber-600'
-              : 'border-transparent text-slate-500 hover:text-slate-800'
+              ? 'border-pink-500 text-pink-400'
+              : 'border-transparent text-slate-400 hover:text-slate-200'
           }`}
         >
-          <span>สมาชิก & บันทึกการล็อกอิน ({members.length})</span>
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>👥 สมาชิก & บันทึกการล็อกอิน ({members.length})</span>
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
         </button>
       </div>
 
@@ -539,48 +636,48 @@ export const AdminPage: React.FC<AdminPageProps> = ({
       {activeTab === 'members' && (
         <div className="space-y-6">
           {/* Sub-tab Switcher */}
-          <div className="bg-white p-4 rounded-2xl border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-xl w-full sm:w-auto">
+          <div className="bg-[#0e102b]/95 p-4 rounded-2xl border border-purple-500/20 shadow-md flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2 bg-[#131538] p-1.5 rounded-xl w-full sm:w-auto border border-purple-500/30">
               <button
                 onClick={() => setMemberSubTab('members')}
                 className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all ${
                   memberSubTab === 'members'
-                    ? 'bg-white text-slate-900 shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
+                    ? 'bg-gradient-to-r from-purple-600 to-pink-500 text-white shadow-md'
+                    : 'text-slate-300 hover:text-white'
                 }`}
               >
                 <Users className="w-3.5 h-3.5" />
-                <span>บัญชีสมาชิก ({members.length})</span>
+                <span>👥 บัญชีคนสมัครสมาชิก ({members.length})</span>
               </button>
               <button
                 onClick={() => setMemberSubTab('logs')}
                 className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all ${
                   memberSubTab === 'logs'
-                    ? 'bg-white text-slate-900 shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
+                    ? 'bg-gradient-to-r from-purple-600 to-pink-500 text-white shadow-md'
+                    : 'text-slate-300 hover:text-white'
                 }`}
               >
-                <Activity className="w-3.5 h-3.5 text-amber-600" />
-                <span>บันทึกการล็อกอินล่าสุด ({loginLogs.length})</span>
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                <Activity className="w-3.5 h-3.5 text-pink-300" />
+                <span>📋 บันทึกประวัติการล็อกอิน ({loginLogs.length})</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
               </button>
             </div>
 
             <div className="flex items-center gap-3 w-full sm:w-auto">
               <div className="relative flex-1 sm:w-64">
-                <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-purple-400" />
                 <input
                   type="text"
                   placeholder="ค้นหาชื่อ, อีเมล หรือ username..."
                   value={memberSearch}
                   onChange={(e) => setMemberSearch(e.target.value)}
-                  className="w-full pl-9 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-400"
+                  className="w-full pl-9 pr-3 py-1.5 bg-[#131538] border border-purple-500/30 rounded-xl text-xs text-white placeholder-slate-400 focus:bg-[#181b47] focus:outline-hidden focus:ring-2 focus:ring-pink-500"
                 />
               </div>
               <button
                 onClick={loadAdminData}
                 title="รีเฟรชข้อมูล"
-                className="p-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-600 text-xs flex items-center gap-1"
+                className="p-2 rounded-xl border border-purple-500/30 bg-[#131538] hover:bg-[#1d2157] text-pink-300 text-xs flex items-center gap-1 transition-colors"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
               </button>
@@ -589,19 +686,20 @@ export const AdminPage: React.FC<AdminPageProps> = ({
 
           {/* SUB-TAB 1: MEMBERS LIST */}
           {memberSubTab === 'members' && (
-            <div className="bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden">
-              <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+            <div className="bg-[#0e102b]/95 rounded-3xl border border-purple-500/20 shadow-lg overflow-hidden">
+              <div className="p-4 border-b border-purple-900/40 flex items-center justify-between">
                 <div>
-                  <h3 className="font-bold text-sm text-slate-900">
-                    รายชื่อสมาชิกและสถานะการเข้าใช้งาน
+                  <h3 className="font-bold text-sm text-white flex items-center gap-2">
+                    <Users className="w-4 h-4 text-pink-400" />
+                    <span>รายชื่อสมาชิกและสถานะการเข้าใช้งาน (Registered Users)</span>
                   </h3>
-                  <p className="text-[11px] text-slate-500">
-                    ตรวจสอบว่าใครกำลังออนไลน์, ล็อกอินกี่ครั้ง และเข้าใช้งานล่าสุดเมื่อใด
+                  <p className="text-[11px] text-slate-300">
+                    ตรวจสอบว่าใครกำลังออนไลน์, สมัครไว้เมื่อไหร่, ล็อกอินกี่ครั้ง และเข้าใช้งานล่าสุดเมื่อใด
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 font-bold text-[11px] border border-emerald-200">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-950 text-pink-300 font-bold text-[11px] border border-purple-500/40">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
                     <span>ออนไลน์: {members.filter((m) => m.isOnline).length || 1} คน</span>
                   </span>
                 </div>
@@ -609,18 +707,18 @@ export const AdminPage: React.FC<AdminPageProps> = ({
 
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
+                  <thead className="bg-[#131538] text-pink-300 font-semibold border-b border-purple-900/40">
                     <tr>
-                      <th className="p-3.5">ผู้ใช้งาน</th>
-                      <th className="p-3.5">อีเมล</th>
-                      <th className="p-3.5">บทบาท</th>
-                      <th className="p-3.5 text-center">สถานะออนไลน์</th>
+                      <th className="p-3.5">ผู้ใช้งาน (Member)</th>
+                      <th className="p-3.5">อีเมล (Email)</th>
+                      <th className="p-3.5">บทบาท (Role)</th>
+                      <th className="p-3.5 text-center">สถานะ</th>
                       <th className="p-3.5 text-center">จำนวนครั้งที่ล็อกอิน</th>
                       <th className="p-3.5">เข้าสู่ระบบล่าสุด</th>
                       <th className="p-3.5 text-center">สถานที่โปรด</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-purple-900/30">
                     {members
                       .filter((m) => {
                         if (!memberSearch) return true;
@@ -635,28 +733,28 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                         const isOnline = m.isOnline || m.username === 'admin';
                         const loginCount = m.loginCount || (m.role === 'admin' ? 24 : 6);
                         return (
-                          <tr key={m.id} className="hover:bg-slate-50/70 transition-colors">
-                            <td className="p-3.5 font-bold text-slate-900 flex items-center gap-2.5">
+                          <tr key={m.id} className="hover:bg-[#131538]/60 transition-colors">
+                            <td className="p-3.5 font-bold text-white flex items-center gap-2.5">
                               <div className="relative">
-                                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-500 to-rose-500 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+                                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-600 to-pink-500 text-white flex items-center justify-center font-bold text-xs shadow-md">
                                   {m.displayName.charAt(0)}
                                 </div>
                                 {isOnline && (
-                                  <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white"></span>
+                                  <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-[#0e102b]"></span>
                                 )}
                               </div>
                               <div>
-                                <div className="font-extrabold text-slate-900">{m.displayName}</div>
-                                <div className="text-[11px] text-slate-400 font-normal">@{m.username}</div>
+                                <div className="font-extrabold text-white">{m.displayName}</div>
+                                <div className="text-[11px] text-pink-300/70 font-normal">@{m.username}</div>
                               </div>
                             </td>
-                            <td className="p-3.5 text-slate-600">{m.email}</td>
+                            <td className="p-3.5 text-slate-300">{m.email}</td>
                             <td className="p-3.5">
                               <span
                                 className={`px-2 py-0.5 rounded-md font-bold text-[10px] ${
                                   m.role === 'admin'
-                                    ? 'bg-amber-100 text-amber-800 border border-amber-200'
-                                    : 'bg-slate-100 text-slate-700'
+                                    ? 'bg-purple-950 text-pink-300 border border-pink-500/40'
+                                    : 'bg-slate-800 text-slate-300'
                                 }`}
                               >
                                 {m.role.toUpperCase()}
@@ -664,24 +762,24 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                             </td>
                             <td className="p-3.5 text-center">
                               {isOnline ? (
-                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
+                                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-950/80 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
                                   <span>ออนไลน์</span>
                                 </span>
                               ) : (
-                                <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 text-[10px] font-medium">
+                                <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 text-[10px] font-medium">
                                   ออฟไลน์
                                 </span>
                               )}
                             </td>
-                            <td className="p-3.5 text-center font-black text-amber-600">
-                              <span className="bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">
+                            <td className="p-3.5 text-center font-black text-pink-400">
+                              <span className="bg-purple-950/80 px-2.5 py-1 rounded-lg border border-purple-500/40">
                                 {loginCount} ครั้ง
                               </span>
                             </td>
-                            <td className="p-3.5 text-slate-600">
+                            <td className="p-3.5 text-slate-300">
                               <div className="flex items-center gap-1.5 text-[11px]">
-                                <Clock className="w-3 h-3 text-slate-400" />
+                                <Clock className="w-3 h-3 text-purple-400" />
                                 <span>
                                   {m.lastLoginAt
                                     ? new Date(m.lastLoginAt).toLocaleString('th-TH', {
@@ -692,7 +790,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                                 </span>
                               </div>
                             </td>
-                            <td className="p-3.5 text-center font-semibold text-rose-600">
+                            <td className="p-3.5 text-center font-semibold text-pink-400">
                               {m.favorites ? m.favorites.length : 0} แห่ง
                             </td>
                           </tr>
@@ -706,25 +804,25 @@ export const AdminPage: React.FC<AdminPageProps> = ({
 
           {/* SUB-TAB 2: LOGIN ACTIVITY LOGS */}
           {memberSubTab === 'logs' && (
-            <div className="bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden">
-              <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+            <div className="bg-[#0e102b]/95 rounded-3xl border border-purple-500/20 shadow-lg overflow-hidden">
+              <div className="p-4 border-b border-purple-900/40 flex items-center justify-between">
                 <div>
-                  <h3 className="font-bold text-sm text-slate-900 flex items-center gap-2">
-                    <Activity className="w-4 h-4 text-amber-500" />
+                  <h3 className="font-bold text-sm text-white flex items-center gap-2">
+                    <Activity className="w-4 h-4 text-pink-400" />
                     <span>บันทึกประวัติการล็อกอินแบบเรียลไทม์ (Login Activity Audit)</span>
                   </h3>
-                  <p className="text-[11px] text-slate-500">
-                    ประวัติเวลาเข้าสู่ระบบของแต่ละบัญชีแบบละเอียด
+                  <p className="text-[11px] text-slate-300">
+                    ประวัติเวลาเข้าสู่ระบบของแต่ละบัญชีแบบละเอียด บันทึกจริงลงเซิร์ฟเวอร์
                   </p>
                 </div>
-                <div className="text-xs text-slate-500">
-                  รวมทั้งหมด <span className="font-bold text-slate-900">{loginLogs.length}</span> รายการ
+                <div className="text-xs text-pink-300 font-semibold">
+                  รวมทั้งหมด <span className="font-bold text-white">{loginLogs.length}</span> รายการ
                 </div>
               </div>
 
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
+                  <thead className="bg-[#131538] text-pink-300 font-semibold border-b border-purple-900/40">
                     <tr>
                       <th className="p-3.5">ผู้เข้าสู่ระบบ</th>
                       <th className="p-3.5">สิทธิ์</th>
@@ -733,7 +831,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                       <th className="p-3.5 text-center">สถานะการเข้าสู่ระบบ</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-purple-900/30">
                     {loginLogs
                       .filter((log) => {
                         if (!memberSearch) return true;
@@ -744,30 +842,30 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                         );
                       })
                       .map((log, idx) => (
-                        <tr key={log.id || idx} className="hover:bg-slate-50/70">
-                          <td className="p-3.5 font-bold text-slate-900 flex items-center gap-2">
-                            <div className="w-7 h-7 rounded-full bg-slate-800 text-white flex items-center justify-center font-bold text-[10px]">
+                        <tr key={log.id || idx} className="hover:bg-[#131538]/60 transition-colors">
+                          <td className="p-3.5 font-bold text-white flex items-center gap-2">
+                            <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-purple-600 to-pink-500 text-white flex items-center justify-center font-bold text-[10px]">
                               {log.displayName?.charAt(0) || 'U'}
                             </div>
                             <div>
-                              <div>{log.displayName}</div>
-                              <div className="text-[10px] text-slate-400 font-normal">@{log.username}</div>
+                              <div className="text-white">{log.displayName}</div>
+                              <div className="text-[10px] text-pink-300/70 font-normal">@{log.username}</div>
                             </div>
                           </td>
                           <td className="p-3.5">
                             <span
                               className={`px-2 py-0.5 rounded-md font-bold text-[10px] ${
                                 log.role === 'admin'
-                                  ? 'bg-amber-100 text-amber-800'
-                                  : 'bg-slate-100 text-slate-700'
+                                  ? 'bg-purple-950 text-pink-300 border border-pink-500/40'
+                                  : 'bg-slate-800 text-slate-300'
                               }`}
                             >
                               {log.role?.toUpperCase() || 'MEMBER'}
                             </span>
                           </td>
-                          <td className="p-3.5 text-slate-600">
+                          <td className="p-3.5 text-slate-300">
                             <div className="flex items-center gap-1.5">
-                              <Clock className="w-3.5 h-3.5 text-amber-500" />
+                              <Clock className="w-3.5 h-3.5 text-pink-400" />
                               <span className="font-medium">
                                 {new Date(log.loginAt).toLocaleString('th-TH', {
                                   dateStyle: 'medium',
@@ -776,14 +874,14 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                               </span>
                             </div>
                           </td>
-                          <td className="p-3.5 text-slate-600">
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[11px]">
-                              <Laptop className="w-3 h-3 text-slate-400" />
+                          <td className="p-3.5 text-slate-300">
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#131538] text-slate-300 text-[11px] border border-purple-500/30">
+                              <Laptop className="w-3 h-3 text-purple-400" />
                               <span>{log.device || 'Web Browser'}</span>
                             </span>
                           </td>
                           <td className="p-3.5 text-center">
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold">
                               <CheckCircle2 className="w-3 h-3" />
                               <span>สำเร็จ (Success)</span>
                             </span>

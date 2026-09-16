@@ -42,7 +42,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: 'directory', label: `สถานที่ (${placesCount})`, icon: Compass },
     { id: 'stats', label: 'แดชบอร์ด', icon: BarChart3 },
     { id: 'timeline', label: 'Project Timeline', icon: Calendar },
-    { id: 'admin', label: 'หลังบ้าน (Admin)', icon: Shield, adminOnly: false }
+    { id: 'admin', label: 'หลังบ้าน / ดูคนสมัคร (Admin)', icon: Shield, badge: 'ดูสมาชิก' }
   ];
 
   const handleSelectTab = (tabId: string) => {
