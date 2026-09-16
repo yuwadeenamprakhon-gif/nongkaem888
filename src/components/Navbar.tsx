@@ -44,9 +44,9 @@ export const Navbar: React.FC<NavbarProps> = ({
   const navItems = [
     { id: 'home', label: 'สุ่มที่เที่ยว', icon: Dice5, badge: 'HOT' },
     { id: 'directory', label: `สถานที่ (${placesCount})`, icon: Compass },
-    { id: 'stats', label: 'แดชบอร์ด', icon: BarChart3 },
-    { id: 'timeline', label: 'Project Timeline', icon: Calendar },
-    { id: 'admin', label: 'หลังบ้าน / ดูคนสมัคร (Admin)', icon: Shield, badge: 'ดูสมาชิก' }
+    { id: 'stats', label: 'แดชบอร์ด', icon: BarChart3, isStats: true, badge: 'Live' },
+    { id: 'timeline', label: 'Timeline', icon: Calendar },
+    { id: 'admin', label: 'หลังบ้าน (Admin)', icon: Shield, badge: 'ผู้ดูแล', isAdmin: true }
   ];
 
   const handleSelectTab = (tabId: string) => {
@@ -91,14 +91,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                   ชลบุรี
                 </span>
               </div>
-              <p className="text-[11px] sm:text-xs text-slate-400 font-medium leading-none mt-0.5">
+              <p className="hidden sm:block text-[11px] sm:text-xs text-slate-400 font-medium leading-none mt-0.5">
                 “วันนี้ไปไหนดี?” สุ่มที่เที่ยวออนไลน์
               </p>
             </div>
           </div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-1 lg:gap-2">
+          {/* Desktop Navigation (Laptops & Desktops) */}
+          <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = currentTab === item.id;
@@ -107,16 +107,38 @@ export const Navbar: React.FC<NavbarProps> = ({
                   key={item.id}
                   id={`nav-link-${item.id}`}
                   onClick={() => handleSelectTab(item.id)}
-                  className={`relative flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-medium transition-all ${
+                  className={`relative flex items-center gap-2 px-3 py-2 rounded-xl text-xs xl:text-sm font-semibold transition-all ${
                     isActive
-                      ? `bg-white/10 ${theme.accentText} font-bold border border-white/20 shadow-md`
+                      ? `bg-white/15 ${theme.accentText} font-bold border border-white/30 shadow-md`
+                      : item.isAdmin
+                      ? 'bg-amber-950/40 text-amber-300 border border-amber-500/40 hover:bg-amber-900/50 hover:text-white shadow-xs'
+                      : item.isStats
+                      ? 'bg-emerald-950/30 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-900/40 hover:text-white'
                       : 'text-slate-300 hover:text-white hover:bg-white/5'
                   }`}
                 >
-                  <Icon className={`w-4 h-4 ${isActive ? theme.accentText : 'text-slate-400'}`} />
+                  <Icon
+                    className={`w-4 h-4 ${
+                      isActive
+                        ? theme.accentText
+                        : item.isAdmin
+                        ? 'text-amber-400'
+                        : item.isStats
+                        ? 'text-emerald-400'
+                        : 'text-slate-400'
+                    }`}
+                  />
                   <span>{item.label}</span>
                   {item.badge && (
-                    <span className={`text-[9px] font-bold px-1.5 py-0.2 bg-gradient-to-r ${theme.accentGradient} text-white rounded-full`}>
+                    <span
+                      className={`text-[9px] font-extrabold px-1.5 py-0.5 rounded-full ${
+                        item.isAdmin
+                          ? 'bg-amber-500 text-slate-950 font-black'
+                          : item.isStats
+                          ? 'bg-emerald-500 text-slate-950 font-black'
+                          : `bg-gradient-to-r ${theme.accentGradient} text-white`
+                      }`}
+                    >
                       {item.badge}
                     </span>
                   )}
@@ -126,16 +148,16 @@ export const Navbar: React.FC<NavbarProps> = ({
           </nav>
 
           {/* Right Action Icons & User */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-2.5">
             {/* Theme Selector Button */}
             <button
               id="btn-theme-modal-nav"
               onClick={() => setIsThemeModalOpen(true)}
               title={`คลิกเพื่อเปลี่ยนธีมสีเว็บไซต์ (ปัจจุบัน: ${theme.thaiName})`}
-              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border border-white/20 text-xs font-bold text-white shadow-xs transition-all hover:scale-105 active:scale-95 bg-white/10 hover:bg-white/20"
+              className="flex items-center gap-1.5 px-2 sm:px-3 py-1.5 rounded-xl border border-white/20 text-xs font-bold text-white shadow-xs transition-all hover:scale-105 active:scale-95 bg-white/10 hover:bg-white/20"
             >
               <Palette className="w-3.5 h-3.5 text-amber-300" />
-              <span className="hidden sm:inline">ธีม: {theme.name.split(' ')[0]}</span>
+              <span className="hidden md:inline">ธีม: {theme.name.split(' ')[0]}</span>
               <span className="text-xs">{theme.icon}</span>
             </button>
 
@@ -144,7 +166,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               id="btn-deploy-guide"
               onClick={onOpenDeployGuide}
               title="คู่มือ GitHub & Deploy Vercel"
-              className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-white/15 text-xs font-medium text-slate-300 hover:bg-white/10 hover:text-white transition-colors"
+              className="hidden xl:flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-white/15 text-xs font-medium text-slate-300 hover:bg-white/10 hover:text-white transition-colors"
             >
               <FolderGit2 className="w-3.5 h-3.5 text-slate-400" />
               <span>GitHub / Deploy</span>
@@ -188,18 +210,19 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 id="btn-login-trigger"
                 onClick={onOpenAuth}
-                className={`flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r ${theme.accentGradient} text-white text-xs sm:text-sm font-bold shadow-lg hover:opacity-90 transition-all duration-200 active:scale-95`}
+                className={`flex items-center gap-1.5 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl bg-gradient-to-r ${theme.accentGradient} text-white text-xs sm:text-sm font-bold shadow-lg hover:opacity-90 transition-all duration-200 active:scale-95`}
               >
-                <User className="w-3.5 h-3.5" />
-                <span>เข้าสู่ระบบ / สมาชิก</span>
+                <User className="w-3.5 h-3.5 shrink-0" />
+                <span className="hidden xs:inline">เข้าสู่ระบบ</span>
+                <span className="hidden sm:inline"> / สมาชิก</span>
               </button>
             )}
 
-            {/* Mobile Hamburger Button */}
+            {/* Mobile & Tablet Hamburger Button */}
             <button
               id="mobile-menu-toggle"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-xl text-slate-300 hover:bg-white/10 transition-colors"
+              className="lg:hidden p-2 rounded-xl text-slate-300 hover:bg-white/10 transition-colors"
               aria-label="Toggle Menu"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -208,10 +231,10 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
       </div>
 
-      {/* Mobile Menu Dropdown */}
+      {/* Mobile & Tablet Menu Dropdown */}
       {mobileMenuOpen && (
         <div
-          className="md:hidden border-t border-white/10 px-4 pt-3 pb-5 space-y-3 shadow-2xl animate-in slide-in-from-top-2 duration-200"
+          className="lg:hidden border-t border-white/10 px-4 pt-3 pb-5 space-y-3 shadow-2xl animate-in slide-in-from-top-2 duration-200"
           style={{ backgroundColor: theme.surfaceHex }}
         >
           {navItems.map((item) => {

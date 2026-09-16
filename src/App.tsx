@@ -10,6 +10,8 @@ import { AuthModal } from './components/AuthModal';
 import { DeployGuideModal } from './components/DeployGuideModal';
 import { ThemeModal } from './components/ThemeModal';
 import { FloatingThemeButton } from './components/FloatingThemeButton';
+import { QuickTabBar } from './components/QuickTabBar';
+import { BottomNavBar } from './components/BottomNavBar';
 import { useTheme } from './context/ThemeContext';
 import { HomePage } from './pages/HomePage';
 import { DirectoryPage } from './pages/DirectoryPage';
@@ -167,7 +169,14 @@ export default function App() {
       </div>
 
       {/* Main App Body */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6 relative z-10">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 pt-3 sm:pt-6 pb-28 lg:pb-12 relative z-10">
+        {/* Prominent Quick Tab Bar Visible on All Devices & Screens */}
+        <QuickTabBar
+          currentTab={currentTab}
+          setCurrentTab={setCurrentTab}
+          placesCount={places.length}
+        />
+
         {currentTab === 'home' && (
           <HomePage
             places={places}
@@ -333,6 +342,15 @@ export default function App() {
       <DeployGuideModal
         isOpen={isDeployGuideOpen}
         onClose={() => setIsDeployGuideOpen(false)}
+      />
+
+      {/* Mobile & Tablet Fixed Bottom Navigation Bar */}
+      <BottomNavBar
+        currentTab={currentTab}
+        setCurrentTab={setCurrentTab}
+        currentUser={currentUser}
+        onOpenAuth={() => setIsAuthOpen(true)}
+        placesCount={places.length}
       />
     </div>
   );

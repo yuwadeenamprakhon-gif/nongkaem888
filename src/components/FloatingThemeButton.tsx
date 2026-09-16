@@ -8,7 +8,7 @@ export const FloatingThemeButton: React.FC = () => {
   const [isQuickOpen, setIsQuickOpen] = useState(false);
 
   return (
-    <div className="fixed bottom-5 left-5 z-40 flex flex-col items-start gap-2">
+    <div className="fixed bottom-20 lg:bottom-5 left-3 sm:left-4 lg:left-5 z-40 flex flex-col items-start gap-2">
       {/* Quick Theme Picker Popover */}
       {isQuickOpen && (
         <div

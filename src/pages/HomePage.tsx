@@ -60,37 +60,37 @@ export const HomePage: React.FC<HomePageProps> = ({
         <div className="absolute -top-16 -left-16 w-48 h-48 rounded-full bg-indigo-600/20 blur-2xl pointer-events-none" />
         <div className="absolute -bottom-16 -right-16 w-56 h-56 rounded-full bg-pink-600/20 blur-2xl pointer-events-none" />
 
-        <div className="relative max-w-3xl mx-auto space-y-4">
+        <div className="relative max-w-3xl mx-auto space-y-3 sm:space-y-4">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-950/80 shadow-xs border border-purple-500/40 text-xs font-semibold text-pink-300">
-            <span className="flex h-2 w-2 rounded-full bg-pink-500 animate-pulse" />
-            <span>NongKaem888 • ฐานข้อมูล 105+ สถานที่จริงในชลบุรี (มีรูปครบ 3-4 รูป/แห่ง)</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-950/80 shadow-xs border border-purple-500/40 text-[11px] sm:text-xs font-semibold text-pink-300 max-w-full">
+            <span className="flex h-2 w-2 rounded-full bg-pink-500 animate-pulse shrink-0" />
+            <span className="truncate">NongKaem888 • 105+ สถานที่จริงในชลบุรี (มีรูป 3-4 รูป/แห่ง)</span>
           </div>
 
           {/* Main Display Headline */}
-          <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">
+          <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
             “วันนี้ไปไหนดี?”
-            <span className="block text-2xl sm:text-4xl mt-1 bg-gradient-to-r from-purple-400 via-fuchsia-400 to-pink-400 bg-clip-text text-transparent">
+            <span className="block text-xl sm:text-3xl lg:text-4xl mt-1 bg-gradient-to-r from-purple-400 via-fuchsia-400 to-pink-400 bg-clip-text text-transparent">
               สุ่มที่เที่ยวชลบุรี ปลดล็อกทริปที่ใช่ทันที
             </span>
           </h1>
 
-          <p className="text-sm sm:text-base text-slate-300 max-w-xl mx-auto font-normal leading-relaxed">
+          <p className="text-xs sm:text-sm md:text-base text-slate-300 max-w-xl mx-auto font-normal leading-relaxed px-2">
             หมดปัญหาไม่รู้จะไปไหน! สุ่มสถานที่จริงครบทุกสไตล์ ทั้งทะเล เกาะ คาเฟ่ ตลาด
             ห้าง สวนน้ำ จุดถ่ายรูป พร้อมแกลเลอรี่รูปภาพ 3-4 รูปให้ชมก่อนเดินทาง
           </p>
 
           {/* District Selector & Filter Details Bar */}
-          <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
+          <div className="pt-2 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
             {/* District Dropdown */}
-            <div className="flex items-center gap-1.5 bg-[#121438] px-3.5 py-2 rounded-2xl border border-purple-500/30 shadow-xs text-xs sm:text-sm text-slate-200">
-              <MapPin className="w-4 h-4 text-pink-400 shrink-0" />
+            <div className="flex items-center gap-1.5 bg-[#121438] px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-2xl border border-purple-500/30 shadow-xs text-xs sm:text-sm text-slate-200">
+              <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-pink-400 shrink-0" />
               <span className="font-semibold text-slate-300">พื้นที่:</span>
               <select
                 id="select-district-filter"
                 value={selectedDistrict}
                 onChange={(e) => setSelectedDistrict(e.target.value)}
-                className="bg-transparent font-bold text-pink-300 focus:outline-hidden cursor-pointer"
+                className="bg-transparent font-bold text-pink-300 focus:outline-hidden cursor-pointer text-xs sm:text-sm"
               >
                 {CHONBURI_DISTRICTS.map((d) => (
                   <option key={d} value={d} className="bg-[#121438] text-white">
@@ -101,8 +101,8 @@ export const HomePage: React.FC<HomePageProps> = ({
             </div>
 
             {/* Candidate count indicator */}
-            <div className="flex items-center gap-1.5 bg-[#121438] px-3.5 py-2 rounded-2xl border border-purple-500/30 shadow-xs text-xs sm:text-sm text-slate-300">
-              <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+            <div className="flex items-center gap-1.5 bg-[#121438] px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-2xl border border-purple-500/30 shadow-xs text-xs sm:text-sm text-slate-300">
+              <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400 shrink-0" />
               <span>
                 พร้อมสุ่ม <strong className="text-white font-bold">{eligiblePlaces.length}</strong> แห่ง
               </span>
@@ -110,19 +110,19 @@ export const HomePage: React.FC<HomePageProps> = ({
           </div>
 
           {/* GIANT RANDOM BUTTON (Mobile-first, prominent, tactile) */}
-          <div className="pt-4 sm:pt-6">
+          <div className="pt-3 sm:pt-6 flex justify-center">
             <button
               id="btn-main-random"
               onClick={handleRandomClick}
-              className="group relative w-full sm:w-auto min-w-[280px] sm:min-w-[340px] px-8 py-5 sm:py-6 rounded-3xl bg-gradient-to-r from-purple-600 via-fuchsia-600 to-pink-500 text-white font-black text-xl sm:text-2xl shadow-[0_0_35px_rgba(236,72,153,0.4)] hover:shadow-[0_0_45px_rgba(236,72,153,0.6)] hover:scale-[1.02] active:scale-98 transition-all duration-200 border border-pink-400/40"
+              className="group relative w-full sm:w-auto max-w-sm sm:max-w-md px-6 sm:px-10 py-4 sm:py-6 rounded-3xl bg-gradient-to-r from-purple-600 via-fuchsia-600 to-pink-500 text-white font-black text-lg sm:text-2xl shadow-[0_0_35px_rgba(236,72,153,0.4)] hover:shadow-[0_0_45px_rgba(236,72,153,0.6)] hover:scale-[1.02] active:scale-98 transition-all duration-200 border border-pink-400/40"
             >
-              <div className="flex items-center justify-center gap-3">
-                <Dice5 className="w-8 h-8 group-hover:rotate-180 transition-transform duration-500 shrink-0" />
-                <span className="tracking-tight">สุ่มที่เที่ยวเลย!</span>
-                <Sparkles className="w-6 h-6 animate-bounce shrink-0" />
+              <div className="flex items-center justify-center gap-2.5 sm:gap-3">
+                <Dice5 className="w-6 h-6 sm:w-8 sm:h-8 group-hover:rotate-180 transition-transform duration-500 shrink-0" />
+                <span className="tracking-tight text-lg sm:text-2xl">สุ่มที่เที่ยวเลย!</span>
+                <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 animate-bounce shrink-0" />
               </div>
 
-              <div className="text-[11px] sm:text-xs font-medium text-pink-200 mt-1 opacity-90">
+              <div className="text-[10px] sm:text-xs font-medium text-pink-200 mt-1 opacity-90 truncate">
                 {activeFilterMeta.label} • {selectedDistrict === 'ทั้งหมด' ? 'ทุกพื้นที่ในชลบุรี' : selectedDistrict}
               </div>
             </button>

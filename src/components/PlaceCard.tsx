@@ -136,9 +136,10 @@ export const PlaceCard: React.FC<PlaceCardProps> = ({
 
             <button
               onClick={() => onSelectPlace(place)}
-              className="text-xs font-semibold text-pink-300 hover:text-white bg-purple-900/40 hover:bg-pink-600 px-2.5 py-1 rounded-lg border border-purple-500/30 transition-all"
+              className="text-xs font-semibold text-pink-300 hover:text-white bg-purple-900/40 hover:bg-pink-600 px-2.5 py-1.5 rounded-lg border border-purple-500/30 transition-all active:scale-95 whitespace-nowrap"
             >
-              ดู 3-4 รูป & รายละเอียด
+              <span className="hidden sm:inline">ดู 3-4 รูป & ข้อมูล</span>
+              <span className="inline sm:hidden">ดูรูปภาพ</span>
             </button>
           </div>
         </div>
