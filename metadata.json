@@ -1,0 +1,6 @@
+{
+  "name": "NongKaem888 – วันนี้ไปไหนดี?",
+  "description": "ระบบสุ่มและค้นหาสถานที่เที่ยว คาเฟ่ ร้านอาหาร จุดเช็คอินในจังหวัดชลบุรี มากกว่า 120+ แห่ง พร้อมระบบสมาชิกและแดชบอร์ดจัดการข้อมูล",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
