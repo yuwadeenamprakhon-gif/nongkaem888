@@ -25,7 +25,9 @@ import {
   Clock,
   Laptop,
   Smartphone,
-  Activity
+  Activity,
+  UserPlus,
+  Info
 } from 'lucide-react';
 import { CHONBURI_DISTRICTS } from '../data/places';
 
@@ -125,6 +127,41 @@ export const AdminPage: React.FC<AdminPageProps> = ({
   const handleTogglePopular = async (place: Place) => {
     await ApiService.updatePlace(place.id, { popular: !place.popular });
     await onRefreshPlaces();
+  };
+
+  const handleSimulateRegister = async (customEmail?: string, customName?: string) => {
+    setLoadingAction(true);
+    try {
+      const realisticCandidates = [
+        { username: 'yuwadee_tour', email: customEmail || 'yuwadeenamprakhon@gmail.com', displayName: customName || 'ยุวดี (นักท่องเที่ยวชลบุรี)' },
+        { username: 'somchai_chilling', email: 'somchai.trip@gmail.com', displayName: 'สมชาย พาชิลบางแสน' },
+        { username: 'ploy_cafehopper', email: 'nongploy.cafe@gmail.com', displayName: 'น้องพลอย สายคาเฟ่' },
+        { username: 'bank_pattaya', email: 'bank.pattaya99@gmail.com', displayName: 'แบงค์ ตะลุยพัทยา' },
+        { username: 'aom_chonburi', email: 'aom.chonburi@gmail.com', displayName: 'อ้อม อ่างศิลา' }
+      ];
+      const candidate = realisticCandidates.find((c) => !members.some((m) => m.email.toLowerCase() === c.email.toLowerCase())) || {
+        username: `traveler_${Math.floor(1000 + Math.random() * 9000)}`,
+        email: `user_${Math.floor(1000 + Math.random() * 9000)}@gmail.com`,
+        displayName: `สมาชิกท่านใหม่ ${Math.floor(Math.random() * 100)}`
+      };
+
+      await ApiService.register(candidate.username, candidate.email, candidate.displayName, 'demo1234');
+      await loadAdminData();
+    } finally {
+      setLoadingAction(false);
+    }
+  };
+
+  const handleDeleteMember = async (memberId: string, memberName: string) => {
+    if (window.confirm(`คุณต้องการลบสมาชิก "${memberName}" ออกจากระบบหรือไม่?`)) {
+      setLoadingAction(true);
+      try {
+        await ApiService.deleteMember(memberId);
+        await loadAdminData();
+      } finally {
+        setLoadingAction(false);
+      }
+    }
   };
 
   // Filtered list for place table
@@ -687,7 +724,8 @@ export const AdminPage: React.FC<AdminPageProps> = ({
           {/* SUB-TAB 1: MEMBERS LIST */}
           {memberSubTab === 'members' && (
             <div className="bg-[#0e102b]/95 rounded-3xl border border-purple-500/20 shadow-lg overflow-hidden">
-              <div className="p-4 border-b border-purple-900/40 flex items-center justify-between">
+              {/* Header */}
+              <div className="p-4 border-b border-purple-900/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                 <div>
                   <h3 className="font-bold text-sm text-white flex items-center gap-2">
                     <Users className="w-4 h-4 text-pink-400" />
@@ -705,6 +743,35 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                 </div>
               </div>
 
+              {/* EXPLANATION INFO BOX */}
+              <div className="p-4 bg-gradient-to-r from-purple-950/70 via-[#13153b]/90 to-pink-950/60 border-b border-purple-900/40 text-xs text-slate-300 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+                <div className="flex items-start gap-2.5">
+                  <div className="w-6 h-6 rounded-full bg-pink-500/20 text-pink-400 flex items-center justify-center shrink-0 mt-0.5 border border-pink-500/30">
+                    <Info className="w-3.5 h-3.5" />
+                  </div>
+                  <div className="space-y-0.5">
+                    <div className="font-bold text-pink-300 flex items-center gap-1.5">
+                      <span>ทำไมก่อนหน้านี้ถึงไม่เห็นอีเมลคนอื่น?</span>
+                    </div>
+                    <p className="text-[11px] text-slate-300 leading-relaxed">
+                      ตามนโยบายความเป็นส่วนตัวสากล (Web Privacy Policy) เบราว์เซอร์จะไม่ส่งอีเมลของคนที่ <span className="text-white font-semibold">"แค่กดเข้ามาดูเว็บเฉยๆ (Visitors)"</span>{' '}
+                      <span className="text-pink-400 font-bold underline">อีเมลจะบันทึกเข้ามาแสดงในหน้านี้ก็ต่อเมื่อคนๆ นั้นกด "สมัครสมาชิก" (Register)</span> ผ่านหน้าเว็บเท่านั้น!
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 shrink-0 w-full md:w-auto">
+                  <button
+                    onClick={() => handleSimulateRegister()}
+                    disabled={loadingAction}
+                    className="w-full md:w-auto flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-500 hover:to-pink-400 text-white font-bold text-xs shadow-md transition-all active:scale-95 disabled:opacity-50"
+                  >
+                    <UserPlus className="w-3.5 h-3.5" />
+                    <span>+ ลองจำลองคนสมัครสมาชิกใหม่</span>
+                  </button>
+                </div>
+              </div>
+
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
                   <thead className="bg-[#131538] text-pink-300 font-semibold border-b border-purple-900/40">
@@ -716,6 +783,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                       <th className="p-3.5 text-center">จำนวนครั้งที่ล็อกอิน</th>
                       <th className="p-3.5">เข้าสู่ระบบล่าสุด</th>
                       <th className="p-3.5 text-center">สถานที่โปรด</th>
+                      <th className="p-3.5 text-center">จัดการ</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-purple-900/30">
@@ -748,7 +816,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                                 <div className="text-[11px] text-pink-300/70 font-normal">@{m.username}</div>
                               </div>
                             </td>
-                            <td className="p-3.5 text-slate-300">{m.email}</td>
+                            <td className="p-3.5 text-slate-300 font-mono text-[11px]">{m.email}</td>
                             <td className="p-3.5">
                               <span
                                 className={`px-2 py-0.5 rounded-md font-bold text-[10px] ${
@@ -792,6 +860,19 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                             </td>
                             <td className="p-3.5 text-center font-semibold text-pink-400">
                               {m.favorites ? m.favorites.length : 0} แห่ง
+                            </td>
+                            <td className="p-3.5 text-center">
+                              {m.role !== 'admin' ? (
+                                <button
+                                  onClick={() => handleDeleteMember(m.id, m.displayName)}
+                                  title="ลบสมาชิกนี้"
+                                  className="p-1.5 rounded-lg bg-red-950/50 text-red-400 hover:bg-red-900/80 hover:text-red-200 transition-colors border border-red-500/30"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+                              ) : (
+                                <span className="text-[10px] text-slate-500">แอดมินหลัก</span>
+                              )}
                             </td>
                           </tr>
                         );

@@ -390,4 +390,13 @@ export class ApiService {
       }
     ];
   }
+
+  static async deleteMember(memberId: string): Promise<boolean> {
+    try {
+      const res = await fetch(`/api/members/${memberId}`, { method: 'DELETE' });
+      return res.ok;
+    } catch {
+      return false;
+    }
+  }
 }

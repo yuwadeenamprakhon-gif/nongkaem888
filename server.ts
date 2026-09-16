@@ -461,6 +461,16 @@ app.get('/api/members/logs', (req, res) => {
   res.json(db.loginLogs || []);
 });
 
+// DELETE /api/members/:id (Admin delete member)
+app.delete('/api/members/:id', (req, res) => {
+  const member = db.members.find((m) => m.id === req.params.id);
+  if (!member) return res.status(404).json({ error: 'Member not found' });
+  if (member.role === 'admin') return res.status(400).json({ error: 'Cannot delete admin account' });
+  db.members = db.members.filter((m) => m.id !== req.params.id);
+  saveDb();
+  res.json({ success: true });
+});
+
 // POST /api/members/:id/favorites
 app.post('/api/members/:id/favorites', (req, res) => {
   const { placeId } = req.body;
